@@ -1,13 +1,6 @@
 import { ChevronRight, MapPin } from "lucide-react";
+import { globalPresence as globalContent } from "@/content/site";
 import { Reveal } from "./Reveal";
-
-const regions = [
-  "North America",
-  "GCC Region",
-  "South Asia",
-  "Africa",
-  "Europe",
-];
 
 const pins = [
   { x: 22, y: 34 },
@@ -19,25 +12,16 @@ const pins = [
   { x: 80, y: 68 },
 ];
 
-const figures = [
-  { value: "40+", label: "Markets" },
-  { value: "5", label: "Regions" },
-  { value: "100+", label: "Partners" },
-  { value: "24/7", label: "Global Support" },
-];
-
 export function GlobalPresence() {
   return (
     <section id="global" className="border-b border-border bg-navy py-24">
       <div className="mx-auto max-w-[1360px] px-6">
         <Reveal>
-          <p className="eyebrow">Global Presence</p>
+          <p className="eyebrow">{globalContent.eyebrow}</p>
         </Reveal>
         <Reveal delay={100}>
-          <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light">
-            Operating in <span className="text-gold">40+</span> Markets
-            <br />
-            Worldwide
+          <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
+            {globalContent.title}
           </h2>
         </Reveal>
 
@@ -79,11 +63,14 @@ export function GlobalPresence() {
 
           <Reveal delay={140}>
             <div className="panel rounded-xs p-6">
-              <h3 className="font-display text-lg text-gold">Our Key Regions</h3>
+              <h3 className="font-display text-lg text-gold">{globalContent.regionsTitle}</h3>
               <ul className="mt-5 space-y-3">
-                {regions.map((r) => (
+                {globalContent.regions.map((r) => (
                   <li key={r}>
-                    <button className="group flex w-full items-center justify-between rounded-xs border border-border bg-navy-deep/60 px-4 py-3 text-left text-[13px] text-foreground transition-colors duration-300 hover:border-gold/60">
+                    <button
+                      type="button"
+                      className="group flex w-full items-center justify-between rounded-xs border border-border bg-navy-deep/60 px-4 py-3 text-left text-[13px] text-foreground transition-colors duration-300 hover:border-gold/60"
+                    >
                       <span className="flex items-center gap-3">
                         <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                         {r}
@@ -101,15 +88,13 @@ export function GlobalPresence() {
         </div>
 
         <div className="mt-10 grid grid-cols-2 rounded-xs border border-border lg:grid-cols-4">
-          {figures.map((f, i) => (
+          {globalContent.figures.map((f, i) => (
             <Reveal
               key={f.label}
               delay={i * 100}
               className={`px-6 py-7 text-center ${i > 0 ? "lg:hairline-x" : ""}`}
             >
-              <div className="font-display text-3xl text-foreground">
-                {f.value}
-              </div>
+              <div className="font-display text-3xl text-foreground">{f.value}</div>
               <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
             </Reveal>
           ))}

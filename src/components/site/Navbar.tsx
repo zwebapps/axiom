@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { brand, navigation } from "@/content/site";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Logo } from "./Logo";
-
-const links = [
-  { label: "Home", href: "#home" },
-  { label: "About Us", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Industries", href: "#industries" },
-  { label: "Global Presence", href: "#global" },
-  { label: "Insights", href: "#insights" },
-  { label: "Contact", href: "#contact" },
-];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -34,12 +25,12 @@ export function Navbar() {
       }`}
     >
       <div className="mx-auto grid max-w-[1360px] grid-cols-[1fr_auto] items-center gap-4 px-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-        <a href="#home" aria-label="Axiom Vertex Group home" className="justify-self-start">
+        <a href="#home" aria-label={`${brand.name} home`} className="justify-self-start">
           <Logo compact={isMobile} animate={false} />
         </a>
 
         <nav className="hidden items-center justify-center gap-7 lg:flex">
-          {links.map((l) => (
+          {navigation.map((l) => (
             <a
               key={l.label}
               href={l.href}
@@ -52,11 +43,8 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center justify-end gap-3">
-          <a
-            href="#contact"
-            className="btn-gold hidden sm:inline-flex"
-          >
-            Book Strategy Session
+          <a href="#contact" className="btn-gold hidden sm:inline-flex">
+            {brand.ctaPrimary}
           </a>
           <button
             type="button"
@@ -75,7 +63,7 @@ export function Navbar() {
         }`}
       >
         <nav className="mx-auto flex max-w-[1360px] flex-col px-6 py-2">
-          {links.map((l) => (
+          {navigation.map((l) => (
             <a
               key={l.label}
               href={l.href}

@@ -1,41 +1,22 @@
 import { ArrowRight } from "lucide-react";
+import { insights as insightsContent } from "@/content/site";
 import { Reveal } from "./Reveal";
-
-const posts = [
-  {
-    tag: "Market Outlook",
-    title: "GCC trade corridors in 2026",
-    excerpt: "Where capital, logistics, and policy are aligning for cross-border growth.",
-  },
-  {
-    tag: "Sector Brief",
-    title: "Energy transition partnerships",
-    excerpt: "Structuring joint ventures across infrastructure and export markets.",
-  },
-  {
-    tag: "Advisory",
-    title: "Entering regulated markets",
-    excerpt: "A practical framework for compliance, partners, and local execution.",
-  },
-];
 
 export function Insights() {
   return (
     <section id="insights" className="border-b border-border bg-navy-deep py-24">
       <div className="mx-auto max-w-[1360px] px-6">
         <Reveal>
-          <p className="eyebrow">Insights</p>
+          <p className="eyebrow">{insightsContent.eyebrow}</p>
         </Reveal>
         <Reveal delay={100}>
-          <h2 className="mt-5 max-w-xl font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light">
-            Perspectives for
-            <br />
-            Global Decision Makers
+          <h2 className="mt-5 max-w-xl font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
+            {insightsContent.title}
           </h2>
         </Reveal>
 
         <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {posts.map((post, i) => (
+          {insightsContent.posts.map((post, i) => (
             <Reveal key={post.title} delay={i * 100}>
               <article className="panel group flex h-full flex-col rounded-xs p-7 transition-all duration-500 hover:-translate-y-1 hover:border-gold/45">
                 <p className="text-[11px] tracking-[0.18em] text-gold uppercase">{post.tag}</p>

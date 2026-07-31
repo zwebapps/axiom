@@ -1,39 +1,33 @@
-import {
-  ArrowRight,
-  Building2,
-  Cpu,
-  Factory,
-  HeartPulse,
-  Landmark,
-  ShoppingBag,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, Building2, Cpu, Factory, HeartPulse, Landmark, ShoppingBag, Zap } from "lucide-react";
+import { industries as industriesContent } from "@/content/site";
 import { LogoMark } from "./LogoMark";
 import { Reveal } from "./Reveal";
 
-const industries = [
-  { icon: HeartPulse, label: "Healthcare" },
-  { icon: Zap, label: "Energy" },
-  { icon: Factory, label: "Manufacturing" },
-  { icon: Building2, label: "Infrastructure" },
-  { icon: Landmark, label: "Government" },
-  { icon: ShoppingBag, label: "Consumer Goods" },
-  { icon: Cpu, label: "Technology" },
-];
+const industryIcons: Record<string, typeof HeartPulse> = {
+  Healthcare: HeartPulse,
+  Energy: Zap,
+  Manufacturing: Factory,
+  Infrastructure: Building2,
+  Government: Landmark,
+  "Consumer Goods": ShoppingBag,
+  Technology: Cpu,
+};
 
 export function Industries() {
+  const items = industriesContent.items.map((label) => ({
+    label,
+    icon: industryIcons[label] ?? Building2,
+  }));
+
   return (
-    <section
-      id="industries"
-      className="border-b border-border bg-navy-deep py-24"
-    >
+    <section id="industries" className="border-b border-border bg-navy-deep py-24">
       <div className="mx-auto max-w-[1360px] px-6 text-center">
         <Reveal>
-          <p className="eyebrow">Our Industries</p>
+          <p className="eyebrow">{industriesContent.eyebrow}</p>
         </Reveal>
         <Reveal delay={100}>
           <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] font-light">
-            Industries We Serve
+            {industriesContent.title}
           </h2>
         </Reveal>
 
@@ -43,12 +37,12 @@ export function Industries() {
 
           <Reveal className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <span className="pulse-gold flex h-24 w-24 items-center justify-center rounded-full border border-gold/50 bg-navy">
-              <LogoMark animate={false} className="h-10 w-11" />
+              <LogoMark animate={false} className="h-11 w-10" />
             </span>
           </Reveal>
 
-          {industries.map((ind, i) => {
-            const angle = (i / industries.length) * Math.PI * 2 - Math.PI / 2;
+          {items.map((ind, i) => {
+            const angle = (i / items.length) * Math.PI * 2 - Math.PI / 2;
             const left = 50 + Math.cos(angle) * 42;
             const top = 50 + Math.sin(angle) * 42;
             return (
@@ -73,15 +67,11 @@ export function Industries() {
               </Reveal>
             );
           })}
-
         </div>
 
         <Reveal delay={120} className="mt-14 flex justify-center">
-          <a
-            href="#contact"
-            className="group inline-flex items-center gap-3 rounded-xs border border-hairline px-7 py-3.5 text-[13px] text-foreground transition-colors duration-300 hover:border-gold hover:text-gold"
-          >
-            View All Industries
+          <a href="#contact" className="btn-outline group">
+            {industriesContent.cta}
             <ArrowRight
               size={15}
               className="transition-transform duration-300 group-hover:translate-x-1"

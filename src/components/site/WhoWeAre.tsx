@@ -2,6 +2,7 @@ import { Play } from "lucide-react";
 import city from "@/assets/city.jpg";
 import ship from "@/assets/ship.jpg";
 import handshake from "@/assets/handshake.jpg";
+import { whoWeAre } from "@/content/site";
 import { Reveal } from "./Reveal";
 
 const shots = [
@@ -16,31 +17,24 @@ export function WhoWeAre() {
       <div className="mx-auto grid max-w-[1360px] gap-16 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
         <div>
           <Reveal>
-            <p className="eyebrow">Who We Are</p>
+            <p className="eyebrow">{whoWeAre.eyebrow}</p>
           </Reveal>
           <Reveal delay={100}>
-            <h2 className="mt-5 font-display text-[clamp(2rem,3.6vw,3rem)] leading-[1.12] font-light">
-              Trusted Advisors.
-              <br />
-              Global Impact.
+            <h2 className="mt-5 font-display text-[clamp(2rem,3.6vw,3rem)] leading-[1.12] font-light whitespace-pre-line">
+              {whoWeAre.title}
             </h2>
           </Reveal>
           <Reveal delay={200}>
             <p className="mt-7 max-w-sm text-[15px] leading-relaxed text-muted-foreground">
-              Axiom Vertex Group is a global advisory and trade facilitation
-              firm helping organizations and governments navigate complex
-              markets, enter new territories and achieve sustained competitive
-              advantage.
+              {whoWeAre.body}
             </p>
           </Reveal>
           <Reveal delay={300}>
-            <button className="group mt-10 flex items-center gap-4">
+            <button type="button" className="group mt-10 flex items-center gap-4">
               <span className="pulse-gold flex h-12 w-12 items-center justify-center rounded-full border border-gold/60 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-navy-deep">
                 <Play size={15} fill="currentColor" />
               </span>
-              <span className="text-[13px] text-foreground">
-                Watch Our Story
-              </span>
+              <span className="text-[13px] text-foreground">{whoWeAre.cta}</span>
             </button>
           </Reveal>
         </div>

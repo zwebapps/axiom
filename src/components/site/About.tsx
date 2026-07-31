@@ -1,19 +1,7 @@
 import { ArrowRight, Check, Play } from "lucide-react";
 import boardroom from "@/assets/boardroom.jpg";
+import { about } from "@/content/site";
 import { Reveal } from "./Reveal";
-
-const points = [
-  "Global Expertise",
-  "Client-Centric Approach",
-  "Integrity & Confidentiality",
-  "Results Driven",
-];
-
-const figures = [
-  { value: "15+", label: "Years of Excellence" },
-  { value: "40+", label: "Markets Worldwide" },
-  { value: "$2B+", label: "Deals Facilitated" },
-];
 
 export function About() {
   return (
@@ -21,24 +9,20 @@ export function About() {
       <div className="mx-auto grid max-w-[1360px] gap-16 px-6 lg:grid-cols-2 lg:items-center">
         <div>
           <Reveal>
-            <p className="eyebrow">About Us</p>
+            <p className="eyebrow">{about.eyebrow}</p>
           </Reveal>
           <Reveal delay={100}>
-            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light">
-              Connecting Opportunities.
-              <br />
-              Delivering Results.
+            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
+              {about.title}
             </h2>
           </Reveal>
           <Reveal delay={180}>
             <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-muted-foreground">
-              With decades of combined experience, we operate at the
-              intersection of business strategy, international trade and
-              investment advisory.
+              {about.body}
             </p>
           </Reveal>
           <ul className="mt-8 space-y-4">
-            {points.map((p, i) => (
+            {about.points.map((p, i) => (
               <Reveal as="li" key={p} delay={240 + i * 90}>
                 <span className="flex items-center gap-3 text-sm text-foreground">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full border border-gold/50 text-gold">
@@ -50,12 +34,10 @@ export function About() {
             ))}
           </ul>
           <div className="mt-12 grid grid-cols-3 gap-6">
-            {figures.map((f, i) => (
+            {about.figures.map((f, i) => (
               <Reveal key={f.label} delay={i * 120}>
                 <div className="font-display text-3xl text-gold">{f.value}</div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {f.label}
-                </div>
+                <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
               </Reveal>
             ))}
           </div>
@@ -74,6 +56,7 @@ export function About() {
               />
               <div className="absolute inset-0 bg-navy-deep/35" />
               <button
+                type="button"
                 aria-label="Play company video"
                 className="pulse-gold absolute top-1/2 left-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-gold text-navy-deep transition-transform duration-300 hover:scale-110"
               >
@@ -82,10 +65,9 @@ export function About() {
             </div>
 
             <div className="float-slow panel absolute right-4 -bottom-10 left-6 rounded-xs p-6 backdrop-blur-md sm:left-auto sm:max-w-xs">
-              <h3 className="font-display text-lg text-gold">Our Mission</h3>
+              <h3 className="font-display text-lg text-gold">{about.missionTitle}</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                To unlock business potential and create sustainable prosperity
-                across global markets.
+                {about.missionBody}
               </p>
             </div>
           </div>
@@ -93,11 +75,8 @@ export function About() {
       </div>
 
       <Reveal className="mx-auto mt-16 max-w-[1360px] px-6">
-        <a
-          href="#services"
-          className="group inline-flex items-center gap-2 text-[13px] text-gold"
-        >
-          Learn more about us
+        <a href="#services" className="group inline-flex items-center gap-2 text-[13px] text-gold">
+          {about.link}
           <ArrowRight
             size={15}
             className="transition-transform duration-300 group-hover:translate-x-1.5"
