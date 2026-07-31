@@ -127,6 +127,18 @@
   --shadow-gold: 0 18px 40px -18px oklch(0.77 0.095 82 / 42%);
   --shadow-panel: 0 24px 60px -30px oklch(0.05 0 0 / 80%);
   --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --page-x: clamp(1.25rem, 3.2vw, 3rem);
+  --page-wide: 1360px;
+  --site-nav-h: 4.75rem;
+}
+
+@utility page-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-wide);
+  margin-inline: 0;
+  padding-inline: var(--page-x);
 }
 
 @layer base {

@@ -18,10 +18,11 @@ export const brand = {
   tagline: "Strategic Business Consultancy & International Trade",
   headline: "Building Businesses. Creating Value. Across Continents.",
   headlineAccent: "Across Continents.",
+  heroEyebrow: "Global business. Limitless opportunities.",
   heroDescription:
-    "We partner with organizations and governments to unlock opportunities, drive growth and create sustainable value across global markets.",
+    "Axiom Vertex Group partners with ambitious organizations to transform opportunities into sustainable growth across global markets.",
   ctaPrimary: "Book Strategy Session",
-  ctaSecondary: "Download Company Profile",
+  ctaSecondary: "Explore Global Presence",
 } as const;
 
 export const navigation = [
@@ -32,6 +33,26 @@ export const navigation = [
   { label: "Global Presence", href: "#global" },
   { label: "Insights", href: "#insights" },
   { label: "Contact", href: "#contact" },
+] as const;
+
+/** Shown in hero “Active global corridors” (order matches globe hover indices). */
+export const heroCorridors = [
+  { from: "USA", to: "UK", dotColor: "#3B82F6" },
+  { from: "USA", to: "GERMANY", dotColor: "#EAB308" },
+  { from: "USA", to: "UAE", dotColor: "#22C55E" },
+  { from: "USA", to: "SAUDI ARABIA", dotColor: "#38BDF8" },
+  { from: "USA", to: "PAKISTAN", dotColor: "#F97316" },
+] as const;
+
+export const heroClientLogos = [
+  "SIEMENS",
+  "DP WORLD",
+  "STANDARD CHARTERED",
+  "ARAMCO",
+  "EMAAR",
+  "ERICSSON",
+  "UNILEVER",
+  "PEPSICO",
 ] as const;
 
 export const heroStats = [
@@ -200,4 +221,5 @@ export const logos = {
   mark: "/brand/axiom-logo-mark.png",
   full: "/brand/axiom-logo-full.png",
   fullAlt: "/brand/axiom-logo-full-alt.png",
+  header: "/brand/axiom-logo-header.png",
 } as const;

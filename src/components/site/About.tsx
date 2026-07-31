@@ -1,12 +1,13 @@
 import { ArrowRight, Check, Play } from "lucide-react";
 import boardroom from "@/assets/boardroom.jpg";
 import { about } from "@/content/site";
+import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
 export function About() {
   return (
     <section id="about" className="border-b border-border bg-navy py-24">
-      <div className="mx-auto grid max-w-[1360px] gap-16 px-6 lg:grid-cols-2 lg:items-center">
+      <PageWrap className="grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>
           <Reveal>
             <p className="eyebrow">{about.eyebrow}</p>
@@ -72,9 +73,10 @@ export function About() {
             </div>
           </div>
         </Reveal>
-      </div>
+      </PageWrap>
 
-      <Reveal className="mx-auto mt-16 max-w-[1360px] px-6">
+      <PageWrap className="mt-16">
+        <Reveal>
         <a href="#services" className="group inline-flex items-center gap-2 text-[13px] text-gold">
           {about.link}
           <ArrowRight
@@ -82,7 +84,8 @@ export function About() {
             className="transition-transform duration-300 group-hover:translate-x-1.5"
           />
         </a>
-      </Reveal>
+        </Reveal>
+      </PageWrap>
     </section>
   );
 }

@@ -19,4 +19,10 @@ Figma prototypes require a logged-in session; site copy is maintained in code at
 | Alternate full lockup | `public/brand/axiom-logo-full-alt.png` |
 | Favicon | `public/favicon.png` (mark) |
 
-Components: `Logo.tsx`, `LogoMark.tsx`.
+## Hero (3D globe)
+
+Interactive hero from [`axiom-vertex-hero.html`](/public/hero/axiom-vertex-hero.reference.html):
+
+- React markup: `src/components/site/Hero.tsx`
+- Styles: `src/styles/axiom-hero.css`
+- WebGL + corridor engine: `public/hero/globe-engine.js` (auto-rotating globe, drag to rotate)

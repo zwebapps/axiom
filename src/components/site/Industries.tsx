@@ -1,6 +1,7 @@
 import { ArrowRight, Building2, Cpu, Factory, HeartPulse, Landmark, ShoppingBag, Zap } from "lucide-react";
 import { industries as industriesContent } from "@/content/site";
 import { LogoMark } from "./LogoMark";
+import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
 const industryIcons: Record<string, typeof HeartPulse> = {
@@ -21,7 +22,7 @@ export function Industries() {
 
   return (
     <section id="industries" className="border-b border-border bg-navy-deep py-24">
-      <div className="mx-auto max-w-[1360px] px-6 text-center">
+      <PageWrap>
         <Reveal>
           <p className="eyebrow">{industriesContent.eyebrow}</p>
         </Reveal>
@@ -78,7 +79,7 @@ export function Industries() {
             />
           </a>
         </Reveal>
-      </div>
+      </PageWrap>
     </section>
   );
 }

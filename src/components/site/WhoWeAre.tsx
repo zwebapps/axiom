@@ -3,6 +3,7 @@ import city from "@/assets/city.jpg";
 import ship from "@/assets/ship.jpg";
 import handshake from "@/assets/handshake.jpg";
 import { whoWeAre } from "@/content/site";
+import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
 const shots = [
@@ -14,7 +15,7 @@ const shots = [
 export function WhoWeAre() {
   return (
     <section className="border-b border-border bg-navy-deep py-24">
-      <div className="mx-auto grid max-w-[1360px] gap-16 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+      <PageWrap className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
         <div>
           <Reveal>
             <p className="eyebrow">{whoWeAre.eyebrow}</p>
@@ -56,7 +57,7 @@ export function WhoWeAre() {
             </Reveal>
           ))}
         </div>
-      </div>
+      </PageWrap>
     </section>
   );
 }

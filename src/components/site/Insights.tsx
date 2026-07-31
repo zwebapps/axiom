@@ -1,11 +1,12 @@
 import { ArrowRight } from "lucide-react";
 import { insights as insightsContent } from "@/content/site";
+import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
 export function Insights() {
   return (
     <section id="insights" className="border-b border-border bg-navy-deep py-24">
-      <div className="mx-auto max-w-[1360px] px-6">
+      <PageWrap>
         <Reveal>
           <p className="eyebrow">{insightsContent.eyebrow}</p>
         </Reveal>
@@ -35,7 +36,7 @@ export function Insights() {
             </Reveal>
           ))}
         </div>
-      </div>
+      </PageWrap>
     </section>
   );
 }

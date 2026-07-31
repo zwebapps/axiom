@@ -8,6 +8,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { services as servicesContent } from "@/content/site";
+import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
 const icons = [Briefcase, Globe, Scale, Truck, TrendingUp, Landmark];
@@ -15,7 +16,7 @@ const icons = [Briefcase, Globe, Scale, Truck, TrendingUp, Landmark];
 export function Services() {
   return (
     <section id="services" className="border-b border-border bg-navy-deep py-24">
-      <div className="mx-auto max-w-[1360px] px-6">
+      <PageWrap>
         <Reveal>
           <p className="eyebrow">{servicesContent.eyebrow}</p>
         </Reveal>
@@ -54,7 +55,7 @@ export function Services() {
             />
           </a>
         </Reveal>
-      </div>
+      </PageWrap>
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import { ChevronRight, MapPin } from "lucide-react";
 import { globalPresence as globalContent } from "@/content/site";
+import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
 const pins = [
@@ -15,7 +16,7 @@ const pins = [
 export function GlobalPresence() {
   return (
     <section id="global" className="border-b border-border bg-navy py-24">
-      <div className="mx-auto max-w-[1360px] px-6">
+      <PageWrap>
         <Reveal>
           <p className="eyebrow">{globalContent.eyebrow}</p>
         </Reveal>
@@ -99,7 +100,7 @@ export function GlobalPresence() {
             </Reveal>
           ))}
         </div>
-      </div>
+      </PageWrap>
     </section>
   );
 }

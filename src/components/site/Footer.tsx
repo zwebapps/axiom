@@ -1,5 +1,6 @@
 import { Globe2, Handshake, ShieldCheck, Sparkles } from "lucide-react";
 import { brand, footer as footerContent } from "@/content/site";
+import { PageWrap } from "./PageWrap";
 import { Logo } from "./Logo";
 import { Reveal } from "./Reveal";
 
@@ -9,7 +10,7 @@ export function Footer() {
   return (
     <footer id="contact" className="bg-navy">
       <div className="border-b border-border">
-        <div className="mx-auto grid max-w-[1360px] grid-cols-1 px-6 sm:grid-cols-2 lg:grid-cols-4">
+        <PageWrap className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {footerContent.pillars.map((p, i) => {
             const Icon = pillarIcons[i] ?? Globe2;
             return (
@@ -28,12 +29,12 @@ export function Footer() {
               </Reveal>
             );
           })}
-        </div>
+        </PageWrap>
       </div>
 
-      <div className="mx-auto grid max-w-[1360px] gap-12 px-6 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <PageWrap className="grid gap-12 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
         <Reveal>
-          <Logo animate={false} />
+          <Logo lockup animate={false} />
           <p className="mt-6 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
             {footerContent.blurb}
           </p>
@@ -55,13 +56,13 @@ export function Footer() {
             </ul>
           </Reveal>
         ))}
-      </div>
+      </PageWrap>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-[1360px] flex-wrap items-center justify-between gap-3 px-6 py-6 text-xs text-muted-foreground">
+        <PageWrap className="flex flex-wrap items-center justify-between gap-3 py-6 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} {brand.name}. All rights reserved.</span>
           <span>Privacy Policy · Terms of Service</span>
-        </div>
+        </PageWrap>
       </div>
     </footer>
   );

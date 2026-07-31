@@ -1,109 +1,233 @@
-import { ArrowRight, Download, Award, DollarSign, Globe2, Users } from "lucide-react";
-import heroGlobe from "@/assets/hero-globe.jpg";
-import { brand, heroStats, trustLogos } from "@/content/site";
-import { Reveal } from "./Reveal";
+"use client";
 
-const statIcons = [Award, DollarSign, Globe2, Users];
+import { useEffect, useRef } from "react";
+
+import { heroClientLogos, heroCorridors } from "@/content/site";
+
+import "@/styles/axiom-hero.css";
+
+declare global {
+  interface Window {
+    initAxiomGlobe?: (root: HTMLElement) => void;
+  }
+}
+
+function ArrowIcon() {
+  return (
+    <svg className="btn__arrow" width="15" height="9" viewBox="0 0 15 9" fill="none" aria-hidden="true">
+      <path d="M0 4.5h13M9.4 1l3.6 3.5-3.6 3.5" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
 
 export function Hero() {
-  const logos = [...trustLogos, ...trustLogos];
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const init = () => {
+      if (root.dataset.globeReady === "1") return;
+      window.initAxiomGlobe?.(root);
+      root.dataset.globeReady = "1";
+    };
+
+    if (window.initAxiomGlobe) {
+      init();
+      return;
+    }
+
+    const existing = document.querySelector('script[data-axiom-globe="1"]');
+    if (existing) {
+      existing.addEventListener("load", init, { once: true });
+      return () => existing.removeEventListener("load", init);
+    }
+
+    const script = document.createElement("script");
+    script.src = "/hero/globe-engine.js";
+    script.async = true;
+    script.dataset.axiomGlobe = "1";
+    script.onload = init;
+    document.body.appendChild(script);
+
+    return () => {
+      script.onload = null;
+    };
+  }, []);
 
   return (
-    <section id="home" className="relative overflow-hidden bg-navy-deep">
-      <div className="absolute inset-0">
-        <img
-          src={heroGlobe}
-          alt="Global network of illuminated cities connected across continents"
-          width={1400}
-          height={1000}
-          className="ken-burns h-full w-full object-cover object-[72%_center] opacity-95 lg:object-right"
-        />
-        <div className="absolute inset-0 bg-linear-to-r from-navy-deep from-25% via-navy-deep/88 to-navy-deep/15 lg:from-30% lg:via-navy-deep/75 lg:to-transparent" />
-        <div className="absolute inset-0 bg-linear-to-t from-navy-deep via-transparent to-navy-deep/50" />
-      </div>
+    <div ref={rootRef} className="axiom-hero">
+      <section className="hero" id="home">
+        <div className="hero__bg" />
+        <div className="hero__grid" />
+        <div className="hero__scrim" aria-hidden="true" />
 
-      <div className="relative mx-auto flex min-h-[min(780px,92vh)] max-w-[1360px] flex-col justify-end px-6 pt-36 pb-0 lg:min-h-[min(880px,100vh)] lg:pt-44">
-        <div className="max-w-2xl pb-16 lg:pb-24">
-          <Reveal>
-            <p className="eyebrow">{brand.tagline}</p>
-          </Reveal>
-          <Reveal delay={120}>
-            <h1 className="mt-6 font-display text-[clamp(2.5rem,5.5vw,4.75rem)] leading-[1.05] font-light">
-              Building Businesses.
-              <br />
-              Creating Value.
-              <br />
-              <span className="text-gold-gradient">{brand.headlineAccent}</span>
-            </h1>
-          </Reveal>
-          <Reveal delay={240}>
-            <p className="mt-8 max-w-md text-[15px] leading-relaxed text-muted-foreground">
-              {brand.heroDescription}
-            </p>
-          </Reveal>
-          <Reveal delay={360}>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <a href="#contact" className="btn-gold group">
-                {brand.ctaPrimary}
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </a>
-              <a href="#about" className="btn-outline group">
-                {brand.ctaSecondary}
-                <Download
-                  size={15}
-                  className="transition-transform duration-300 group-hover:translate-y-0.5"
-                />
-              </a>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-
-      <div className="relative border-y border-border/80 bg-navy-deep/80 backdrop-blur-md">
-        <div className="mx-auto grid max-w-[1360px] grid-cols-2 px-6 lg:grid-cols-4">
-          {heroStats.map((s, i) => {
-            const Icon = statIcons[i] ?? Award;
-            return (
-              <Reveal
-                key={s.value}
-                delay={i * 110}
-                className={`flex items-center gap-4 py-8 ${
-                  i % 2 !== 0 ? "hairline-x pl-6" : ""
-                } lg:pl-6 ${i !== 0 ? "lg:hairline-x" : ""}`}
-              >
-                <Icon size={26} strokeWidth={1.2} className="shrink-0 text-gold" />
-                <div>
-                  <div className="font-display text-3xl text-foreground">{s.value}</div>
-                  <div className="text-xs leading-tight whitespace-pre-line text-muted-foreground">
-                    {s.label}
-                  </div>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="relative border-b border-border bg-navy-deep py-8">
-        <div className="mx-auto max-w-[1360px] px-6">
-          <p className="eyebrow text-center lg:text-left">Trusted by Leading Organizations</p>
-        </div>
-        <div className="logo-marquee mt-5 mask-fade-x">
-          <div className="logo-marquee-track">
-            {logos.map((l, i) => (
-              <span
-                key={`${l}-${i}`}
-                className="font-sans text-sm font-medium tracking-[0.2em] text-muted-foreground/70 uppercase sm:text-base"
-              >
-                {l}
+        <div className="hero__copy">
+          <span className="eyebrow">Global business. Limitless opportunities.</span>
+          <h1>
+            <span>Building Businesses.</span>
+            <span>Creating Value.</span>
+            <span className="accent">Across Continents.</span>
+          </h1>
+          <p className="lede">
+            Axiom Vertex Group partners with ambitious organizations to transform opportunities into
+            sustainable growth across global markets.
+          </p>
+          <div className="hero__cta">
+            <a className="btn btn--gold" href="#contact">
+              Book Strategy Session
+              <ArrowIcon />
+            </a>
+            <a className="btn btn--outline" href="#global">
+              Explore Global Presence
+              <span className="play" aria-hidden="true">
+                <svg width="7" height="8" viewBox="0 0 7 8">
+                  <path d="M0 0l7 4-7 4z" fill="currentColor" />
+                </svg>
               </span>
-            ))}
+            </a>
           </div>
         </div>
-      </div>
-    </section>
+
+        <div className="hero__bottom">
+          <div className="hint">
+            <svg className="hint__ring" viewBox="0 0 30 38" fill="none" aria-hidden="true">
+              <rect x=".6" y=".6" width="28.8" height="36.8" rx="14.4" stroke="rgba(210,166,87,.4)" />
+              <path d="M15 9v7" stroke="var(--gold)" strokeWidth="1.3" />
+              <circle cx="15" cy="22" r="1.6" fill="var(--gold)" />
+              <path
+                d="M15 27.5l1.2 2.3 2.3 1.2-2.3 1.2-1.2 2.3-1.2-2.3-2.3-1.2 2.3-1.2z"
+                fill="rgba(210,166,87,.5)"
+              />
+            </svg>
+            <span className="hint__txt">
+              Drag to rotate
+              <br />
+              Scroll to explore
+            </span>
+          </div>
+
+          <div className="corridors">
+            <div className="corridors__title">Active global corridors</div>
+            <div className="corridors__list" id="corrList">
+              {heroCorridors.map((route, i) => (
+                <button key={`${route.from}-${route.to}`} className="corr" type="button" data-i={i}>
+                  <span
+                    className="corr__dot"
+                    style={{ background: route.dotColor, color: route.dotColor }}
+                  />
+                  {route.from} <span className="corr__swap">⇄</span> {route.to}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="globe" id="globe">
+          <canvas className="globe__earth" id="glc" aria-hidden="true" />
+          <canvas
+            className="globe__canvas"
+            id="gc"
+            aria-label="Axiom Vertex Group trade corridors drawn over a night view of Earth"
+            role="img"
+          />
+          <p className="sr">
+            Live corridors run from the United States to the United Kingdom, Germany, the United Arab
+            Emirates, Saudi Arabia, Qatar, Oman and Pakistan.
+          </p>
+          <div
+            className="globe__hit"
+            id="ghit"
+            tabIndex={0}
+            role="application"
+            aria-label="Drag to rotate the globe, or use the arrow keys"
+          />
+          <div className="markers" id="markers" aria-hidden="true" />
+        </div>
+
+        <div className="globe__tools">
+          <button className="tool" id="tPause" type="button" aria-label="Pause globe rotation" aria-pressed="false">
+            <svg width="11" height="12" viewBox="0 0 11 12" aria-hidden="true">
+              <rect x="0" y="0" width="3.4" height="12" fill="currentColor" />
+              <rect x="7.6" y="0" width="3.4" height="12" fill="currentColor" />
+            </svg>
+          </button>
+          <button className="tool" id="tZoomIn" type="button" aria-label="Zoom in on globe">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M6 1.2v9.6M1.2 6h9.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+          <button className="tool" id="tZoomOut" type="button" aria-label="Zoom out on globe">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M1.2 6h9.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <section className="clients">
+        <span className="eyebrow">Trusted by forward-thinking organizations</span>
+        <div className="clients__row" id="clients">
+          {heroClientLogos.map((name) => (
+            <span key={name} className="client">
+              {name}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="stats" aria-label="Key figures">
+        <div className="stat">
+          <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <circle cx="15" cy="12" r="7" stroke="currentColor" strokeWidth="1.2" />
+            <path
+              d="M15 8.4l1.1 2.3 2.5.4-1.8 1.8.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.8 2.5-.4z"
+              fill="currentColor"
+              opacity=".65"
+            />
+            <path d="M11 18.5 9 28l6-3 6 3-2-9.5" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+          <div>
+            <div className="stat__num">15+</div>
+            <div className="stat__lbl">Years of Excellence</div>
+          </div>
+        </div>
+        <div className="stat">
+          <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <rect x="2.6" y="4" width="24.8" height="22" rx="3" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M7.5 20.5l4.5-5 3.6 3 6.4-8" stroke="currentColor" strokeWidth="1.4" />
+            <circle cx="22" cy="10.5" r="1.6" fill="currentColor" />
+          </svg>
+          <div>
+            <div className="stat__num">£2B+</div>
+            <div className="stat__lbl">Value Delivered</div>
+          </div>
+        </div>
+        <div className="stat">
+          <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <circle cx="15" cy="15" r="12" stroke="currentColor" strokeWidth="1.2" />
+            <ellipse cx="15" cy="15" rx="5" ry="12" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M3.4 11h23.2M3.4 19h23.2" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+          <div>
+            <div className="stat__num">40+</div>
+            <div className="stat__lbl">Markets Served</div>
+          </div>
+        </div>
+        <div className="stat">
+          <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <circle cx="11" cy="10.5" r="4.4" stroke="currentColor" strokeWidth="1.2" />
+            <circle cx="21.5" cy="12" r="3.4" stroke="currentColor" strokeWidth="1.2" opacity=".7" />
+            <path d="M3 25c0-4.4 3.6-7.4 8-7.4s8 3 8 7.4" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M20 18.2c4 .3 7 3.2 7 6.8" stroke="currentColor" strokeWidth="1.2" opacity=".7" />
+          </svg>
+          <div>
+            <div className="stat__num">100+</div>
+            <div className="stat__lbl">Global Partners</div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

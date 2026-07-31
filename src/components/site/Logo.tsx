@@ -10,11 +10,43 @@ type LogoProps = {
   compact?: boolean;
   animate?: boolean;
   className?: string;
+  /** Official header lockup PNG (navbar) */
+  lockup?: boolean;
 };
 
-export function Logo({ compact = false, animate = true, className = "" }: LogoProps) {
+export function Logo({
+  compact = false,
+  animate = true,
+  className = "",
+  lockup = false,
+}: LogoProps) {
   const reduceMotion = useReducedMotion();
   const shouldAnimate = animate && !reduceMotion;
+
+  if (lockup) {
+    return (
+      <motion.div
+        className={`inline-flex items-center ${className}`}
+        initial={shouldAnimate ? { opacity: 0, y: 6 } : false}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: easeLux }}
+        whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+      >
+        <img
+          src={compact ? logos.mark : logos.header}
+          alt={brand.name}
+          className={
+            compact
+              ? "h-10 w-auto max-w-[152px] object-contain object-left sm:h-11"
+              : "h-[44px] w-auto max-w-[min(100%,300px)] object-contain object-left sm:h-[48px] sm:max-w-[320px] md:max-w-[340px]"
+          }
+          width={557}
+          height={192}
+          decoding="async"
+        />
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
