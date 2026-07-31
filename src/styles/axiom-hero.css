@@ -1,4 +1,4 @@
-.axiom-hero{padding-top:var(--site-header-height,4.75rem);background:var(--ink,#04070E);color:var(--text,#EAEFF7);font-family:var(--ui,"Inter",sans-serif);}
+.axiom-hero{padding-top:var(--site-nav-h,4.75rem);background:var(--ink,#04070E);color:var(--text,#EAEFF7);font-family:var(--ui,"Inter",sans-serif);}
 /* Axiom Vertex hero — from axiom-vertex-hero.html */
 .axiom-hero{
   --ink:#04070E;
@@ -229,14 +229,39 @@
 }
 .axiom-hero .clients .eyebrow{color:var(--muted-2);text-align:left;margin-bottom:24px}
 .axiom-hero .clients__row{
-  display:flex;align-items:center;justify-content:space-between;gap:clamp(18px,3vw,48px);
+  display:flex;align-items:center;justify-content:space-between;gap:clamp(14px,2.2vw,36px);
   flex-wrap:wrap;
 }
 .axiom-hero .client{
-  font-size:clamp(13px,1.28vw,18px);font-weight:500;letter-spacing:.11em;
-  color:#7C8798;opacity:.72;transition:.3s ease;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:8px;
+  color:#8B95A8;opacity:.78;transition:opacity .3s ease,color .3s ease;
+  white-space:nowrap;
 }
 .axiom-hero .client:hover{opacity:1;color:#D6DEEA}
+.axiom-hero .client__icon{height:1.35em;width:auto;opacity:.9}
+.axiom-hero .client__word{
+  font-size:clamp(12px,1.15vw,16px);font-weight:600;letter-spacing:.06em;
+  line-height:1;
+}
+.axiom-hero .client__word--siemens{
+  font-size:clamp(13px,1.22vw,17px);font-weight:700;letter-spacing:.1em;
+}
+.axiom-hero .client__word--sc{
+  font-weight:500;letter-spacing:.01em;text-transform:none;font-size:clamp(11px,1.05vw,15px);
+}
+.axiom-hero .client__word--aramco{
+  font-weight:800;letter-spacing:-.02em;text-transform:lowercase;font-size:clamp(14px,1.28vw,18px);
+}
+.axiom-hero .client__word--emaar{
+  font-family:var(--display);font-weight:500;letter-spacing:.28em;font-size:clamp(12px,1.1vw,16px);
+}
+.axiom-hero .client__word--unilever{
+  font-weight:500;letter-spacing:.02em;text-transform:none;font-size:clamp(12px,1.08vw,15px);
+  font-style:italic;
+}
+.axiom-hero .client--ericsson{gap:10px}
+.axiom-hero .client--standard-chartered{gap:10px}
+.axiom-hero .client--unilever .client__icon{height:1.85em}
 
 
 /* ---------- stats ---------- */
@@ -265,85 +290,124 @@
 
 /* ---------- responsive ---------- */
 @media (max-width:1240px){
-  .nav__links{display:none}
-  .nav__links + .nav__right{margin-left:auto}
+  .axiom-hero .nav__links{display:none}
+  .axiom-hero .nav__links + .nav__right{margin-left:auto}
 }
 
-@media (max-width:1080px){
-  .hero{grid-template-columns:1fr}
-}
-
-@media (max-width:1080px){
-  :root{--nav-h:70px}
-  /* tablets keep the globe beside the copy — it never drops below the text */
-  .hero{grid-template-columns:minmax(0,60%) minmax(0,40%)}
-  .hero__copy{padding:clamp(26px,4vw,48px) var(--page-x) clamp(20px,3.4vh,36px)}
-  .hero__bottom{
+/* Tablet / small desktop only (never phones) */
+@media (min-width:768px) and (max-width:1080px){
+  .axiom-hero .hero{
+    grid-template-columns:minmax(0,58%) minmax(0,42%);
+  }
+  .axiom-hero .hero__copy{padding:clamp(26px,4vw,48px) var(--page-x) clamp(20px,3.4vh,36px)}
+  .axiom-hero .hero__bottom{
     grid-template-columns:1fr;
     gap:14px;
   }
-  .hero__bottom .hint{grid-column:1;justify-self:start}
-  .hero__bottom .corridors{grid-column:1;width:100%;max-width:880px;justify-self:center}
-  .corridors{width:min(880px,calc(100% - 40px));margin-left:auto;margin-right:auto}
-  .corridors__list{justify-content:center;flex-wrap:wrap;overflow:visible}
-  .hero__scrim{background:linear-gradient(100deg,rgba(4,7,14,.93) 0%,rgba(4,7,14,.86) 24%,
+  .axiom-hero .hero__bottom .hint{grid-column:1;justify-self:start}
+  .axiom-hero .hero__bottom .corridors{grid-column:1;width:100%;max-width:880px;justify-self:center}
+  .axiom-hero .corridors{width:min(880px,calc(100% - 40px));margin-left:auto;margin-right:auto}
+  .axiom-hero .corridors__list{justify-content:center;flex-wrap:wrap;overflow:visible}
+  .axiom-hero .hero__scrim{background:linear-gradient(100deg,rgba(4,7,14,.93) 0%,rgba(4,7,14,.86) 24%,
     rgba(4,7,14,.55) 42%,rgba(4,7,14,.14) 58%,transparent 68%)}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .stat:nth-child(3){border-left:0}
-  .stat:nth-child(n+3){border-top:1px solid var(--line-2)}
-  .clients__row{justify-content:flex-start;gap:26px 34px}
+  .axiom-hero .stats{grid-template-columns:repeat(2,1fr)}
+  .axiom-hero .stat:nth-child(3){border-left:0}
+  .axiom-hero .stat:nth-child(n+3){border-top:1px solid var(--line-2)}
+  .axiom-hero .clients__row{justify-content:flex-start;gap:26px 34px}
 }
 
-/* Phones drop the globe entirely: it can't be driven by touch at that size
-   and the render loop is pure battery cost. The corridors carry the flags. */
+.axiom-hero .hero__globe-mobile{display:none;pointer-events:none}
 
-@media (max-width:767px),(max-height:480px){
-  .globe,.hero__bottom .hint,.globe__tools,.hero__scrim{display:none}
-  .hero{display:block;min-height:0;padding-bottom:8px}
-  .hero__copy{
-    max-width:min(100%,var(--page-wide,1360px));
-    margin-inline:auto;
-    padding:clamp(26px,6vw,44px) var(--page-x,1.25rem) 22px;
-    padding-left:var(--page-x,1.25rem);
+/* Phones */
+@media (max-width:767px){
+  .axiom-hero .hero{
+    position:relative;
+    display:block;
+    min-height:clamp(22rem,62vh,30rem);
+    padding-bottom:0;
+    overflow:hidden;
   }
-  .axiom-hero h1{font-size:clamp(36px,9vw,52px);line-height:1.06}
-  .axiom-hero h1 span{white-space:normal;width:auto;max-width:100%}
-  .hero__bottom{
-    width:min(100%,var(--page-wide,1360px));
-    margin-inline:auto;
-    padding-left:var(--page-x,1.25rem);
-    padding-right:var(--page-x,1.25rem);
+  .axiom-hero .hero__grid{
+    display:block;
+    opacity:0.35;
+    mask-image:linear-gradient(180deg,#000 0%,transparent 85%);
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 85%);
   }
-  .corridors{width:100%;margin:0 auto 6px;max-width:none;border-radius:14px}
-  .corridors__list{flex-wrap:wrap;overflow:visible;justify-content:center;gap:7px}
-  .corr{background:rgba(255,255,255,.035);border-color:var(--line-2)}
-  .corr__flag{display:none}
-  .axiom-hero .lede{max-width:none}
-  .axiom-hero .stat{justify-content:flex-start;padding-left:var(--page-x,1.25rem);padding-right:var(--page-x,1.25rem)}
-}
-
-@media (max-width:560px){
-  .nav-cta{display:none}
-  .nav{gap:14px}
-  .brand__mark{width:36px;height:36px}
-  .brand__name{font-size:16px;letter-spacing:.11em}
-  .brand__sub{font-size:8px;letter-spacing:.34em}
-  .hero__cta{flex-wrap:wrap}
-  .hero__cta .btn{flex:1 1 100%;justify-content:center}
-  .stat{gap:14px;padding:20px 16px}
-  .mk__flag{width:26px;height:18px}
+  .axiom-hero .hero__scrim{
+    display:block!important;
+    z-index:2;
+    background:linear-gradient(180deg,rgba(4,7,14,.92) 0%,rgba(4,7,14,.78) 28%,rgba(4,7,14,.42) 55%,rgba(4,7,14,.12) 78%,transparent 100%);
+  }
+  .axiom-hero .hero__globe-mobile{
+    display:block;
+    position:absolute;
+    left:50%;
+    top:32%;
+    z-index:1;
+    width:min(118vw,28rem);
+    height:min(118vw,28rem);
+    transform:translate(-50%,-42%);
+  }
+  .axiom-hero .hero__globe-mobile img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    opacity:0.95;
+  }
+  .axiom-hero .globe,
+  .axiom-hero .globe__tools,
+  .axiom-hero .hero__bottom,
+  .axiom-hero .clients--desktop{
+    display:none!important;
+  }
+  .axiom-hero .hero__bg{
+    background:
+      radial-gradient(70% 40% at 50% 34%,rgba(12,24,48,.5),transparent 72%),
+      linear-gradient(180deg,#020408 0%,#04070E 50%,#050a14 100%);
+  }
+  .axiom-hero .hero__copy{
+    position:relative;
+    z-index:3;
+    max-width:none;
+    padding:clamp(0.75rem,3vw,1.125rem) var(--page-x) clamp(0.5rem,2vw,0.875rem);
+  }
+  .axiom-hero h1{font-size:clamp(2rem,9.5vw,2.65rem);line-height:1.07;margin-bottom:1.125rem}
+  .axiom-hero h1 span{white-space:normal}
+  .axiom-hero .lede{font-size:0.9375rem;max-width:none;margin-bottom:1.125rem;line-height:1.7}
+  .axiom-hero .hero__cta{
+    flex-direction:column;
+    align-items:stretch;
+    gap:0.75rem;
+  }
+  .axiom-hero .hero__cta .btn{
+    width:100%;
+    justify-content:center;
+    min-height:3.25rem;
+    padding-inline:1.25rem;
+  }
+  .axiom-hero .hero__cta-secondary{display:none}
+  .axiom-hero .stats{
+    grid-template-columns:repeat(2,1fr);
+    margin-bottom:0;
+  }
+  .axiom-hero .stat{
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    gap:0.625rem;
+    padding:1.125rem var(--page-x);
+  }
+  .axiom-hero .stat + .stat{border-left:0}
+  .axiom-hero .stat:nth-child(n+3){border-top:1px solid var(--line-2)}
+  .axiom-hero .stat:nth-child(odd){border-right:1px solid var(--line-2)}
+  .axiom-hero .stat__num{font-size:clamp(1.5rem,6vw,1.75rem)}
+  .axiom-hero .stat__lbl{font-size:0.625rem;margin-top:0.25rem;line-height:1.35}
 }
 
 @media (max-width:420px){
-  .nav{gap:10px;padding:0 16px}
-  .brand{gap:10px}
-  .brand__mark{width:32px;height:32px}
-  .brand__name{font-size:14px;letter-spacing:.08em}
-  .brand__sub{font-size:7.5px;letter-spacing:.3em}
-  .burger{width:40px;height:40px}
-  .stats{grid-template-columns:1fr}
-  .stat + .stat{border-left:0;border-top:1px solid var(--line-2)}
-  .stat__lbl{margin-top:5px}
+  .axiom-hero .stats{grid-template-columns:1fr}
+  .axiom-hero .stat{border-right:0!important}
+  .axiom-hero .stat + .stat{border-top:1px solid var(--line-2)}
 }
 
 @media (prefers-reduced-motion:reduce){

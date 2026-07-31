@@ -38,7 +38,7 @@ export function Logo({
           className={
             compact
               ? "h-10 w-auto max-w-[152px] object-contain object-left sm:h-11"
-              : "h-[44px] w-auto max-w-[min(100%,300px)] object-contain object-left sm:h-[48px] sm:max-w-[320px] md:max-w-[340px]"
+              : "h-[38px] w-auto max-w-[min(100%,min(58vw,260px))] object-contain object-left sm:h-[44px] sm:max-w-[300px] md:h-[48px] md:max-w-[340px]"
           }
           width={557}
           height={192}

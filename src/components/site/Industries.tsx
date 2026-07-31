@@ -20,20 +20,20 @@ export function Industries() {
   }));
 
   return (
-    <section id="industries" className="border-b border-border bg-navy-deep py-24">
+    <section id="industries" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:hidden">
       <PageWrap>
-        <div className="mx-auto max-w-xl text-center lg:max-w-none lg:text-left">
+        <div className="mx-auto max-w-xl text-center">
           <Reveal>
             <p className="eyebrow">{industriesContent.eyebrow}</p>
           </Reveal>
           <Reveal delay={100}>
-            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] font-light">
+            <h2 className="mt-4 font-display text-[clamp(1.75rem,7vw,2.25rem)] font-light leading-tight">
               {industriesContent.title}
             </h2>
           </Reveal>
         </div>
 
-        <div className="relative mx-auto mt-16 aspect-square w-full max-w-[min(100%,520px)] min-[480px]:max-w-[520px]">
+        <div className="relative mx-auto mt-10 aspect-square w-full max-w-[min(100%,340px)]">
           <span className="absolute inset-[18%] rounded-full border border-border" />
           <span className="absolute inset-[6%] rounded-full border border-border/60" />
 
@@ -69,7 +69,7 @@ export function Industries() {
                   <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 bg-navy text-gold transition-all duration-500 group-hover:scale-110 group-hover:bg-gold group-hover:text-navy-deep">
                     <ind.icon size={18} strokeWidth={1.4} />
                   </span>
-                  <span className="text-[11px] whitespace-nowrap text-muted-foreground">
+                  <span className="max-w-[4.5rem] text-center text-[9px] leading-tight text-muted-foreground">
                     {ind.label}
                   </span>
                 </div>
@@ -78,8 +78,8 @@ export function Industries() {
           })}
         </div>
 
-        <Reveal delay={120} className="mt-14 flex justify-center">
-          <a href="#contact" className="btn-outline group">
+        <Reveal delay={120} className="mt-10 flex justify-center">
+          <a href="#contact" className="btn-outline group w-full max-w-xs justify-center sm:w-auto">
             {industriesContent.cta}
             <ArrowRight
               size={15}

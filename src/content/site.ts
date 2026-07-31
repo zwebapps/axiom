@@ -45,14 +45,14 @@ export const heroCorridors = [
 ] as const;
 
 export const heroClientLogos = [
-  "SIEMENS",
-  "DP WORLD",
-  "STANDARD CHARTERED",
-  "ARAMCO",
-  "EMAAR",
-  "ERICSSON",
-  "UNILEVER",
-  "PEPSICO",
+  "siemens",
+  "dpworld",
+  "standard-chartered",
+  "aramco",
+  "emaar",
+  "ericsson",
+  "unilever",
+  "pepsico",
 ] as const;
 
 export const heroStats = [

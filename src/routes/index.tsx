@@ -19,11 +19,11 @@ function HomePage() {
     <>
       <Navbar />
       <Hero />
+      <Industries />
       <WhoWeAre />
       <About />
       <Services />
       <GlobalPresence />
-      <Industries />
       <Insights />
       <Footer />
     </>

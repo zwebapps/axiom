@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { heroClientLogos, heroCorridors } from "@/content/site";
+import { HeroClientLogo } from "./HeroClientLogo";
 
 import "@/styles/axiom-hero.css";
 
@@ -11,6 +12,8 @@ declare global {
     initAxiomGlobe?: (root: HTMLElement) => void;
   }
 }
+
+const DESKTOP_HERO_MQ = "(min-width: 768px)";
 
 function ArrowIcon() {
   return (
@@ -27,40 +30,50 @@ export function Hero() {
     const root = rootRef.current;
     if (!root) return;
 
-    const init = () => {
-      if (root.dataset.globeReady === "1") return;
-      window.initAxiomGlobe?.(root);
-      root.dataset.globeReady = "1";
+    const mq = window.matchMedia(DESKTOP_HERO_MQ);
+    const run = () => {
+      if (!mq.matches) return;
+      const init = () => {
+        if (root.dataset.globeReady === "1") return;
+        window.initAxiomGlobe?.(root);
+        root.dataset.globeReady = "1";
+      };
+      if (window.initAxiomGlobe) {
+        init();
+        return;
+      }
+      const existing = document.querySelector('script[data-axiom-globe="1"]');
+      if (existing) {
+        existing.addEventListener("load", init, { once: true });
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "/hero/globe-engine.js";
+      script.async = true;
+      script.dataset.axiomGlobe = "1";
+      script.onload = init;
+      document.body.appendChild(script);
     };
 
-    if (window.initAxiomGlobe) {
-      init();
-      return;
-    }
-
-    const existing = document.querySelector('script[data-axiom-globe="1"]');
-    if (existing) {
-      existing.addEventListener("load", init, { once: true });
-      return () => existing.removeEventListener("load", init);
-    }
-
-    const script = document.createElement("script");
-    script.src = "/hero/globe-engine.js";
-    script.async = true;
-    script.dataset.axiomGlobe = "1";
-    script.onload = init;
-    document.body.appendChild(script);
-
-    return () => {
-      script.onload = null;
-    };
+    run();
+    mq.addEventListener("change", run);
+    return () => mq.removeEventListener("change", run);
   }, []);
 
   return (
-    <div ref={rootRef} className="axiom-hero">
-      <section className="hero" id="home">
+    <div ref={rootRef} className="axiom-hero" id="home">
+      <section className="hero">
         <div className="hero__bg" />
         <div className="hero__grid" />
+        <div className="hero__globe-mobile" aria-hidden="true">
+          <img
+            src="/hero/earth-fallback.png"
+            alt=""
+            width={1024}
+            height={1024}
+            decoding="async"
+          />
+        </div>
         <div className="hero__scrim" aria-hidden="true" />
 
         <div className="hero__copy">
@@ -79,7 +92,7 @@ export function Hero() {
               Book Strategy Session
               <ArrowIcon />
             </a>
-            <a className="btn btn--outline" href="#global">
+            <a className="btn btn--outline hero__cta-secondary" href="#global">
               Explore Global Presence
               <span className="play" aria-hidden="true">
                 <svg width="7" height="8" viewBox="0 0 7 8">
@@ -166,13 +179,11 @@ export function Hero() {
         </div>
       </section>
 
-      <section className="clients">
+      <section className="clients clients--desktop">
         <span className="eyebrow">Trusted by forward-thinking organizations</span>
         <div className="clients__row" id="clients">
-          {heroClientLogos.map((name) => (
-            <span key={name} className="client">
-              {name}
-            </span>
+          {heroClientLogos.map((id) => (
+            <HeroClientLogo key={id} id={id} />
           ))}
         </div>
       </section>

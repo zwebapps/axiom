@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
 import {
   motion,
@@ -18,6 +18,18 @@ import { whoWeAre } from "@/content/site";
 import { PageWrap } from "./PageWrap";
 
 const easeLux = [0.22, 1, 0.36, 1] as const;
+
+function useMaxPhone() {
+  const [match, setMatch] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setMatch(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return match;
+}
 
 const shots = [
   {
@@ -44,27 +56,30 @@ function GalleryTile({
   shot,
   progress,
   reduceMotion,
+  staticLayout,
 }: {
   shot: (typeof shots)[number];
   progress: MotionValue<number>;
   reduceMotion: boolean | null;
+  staticLayout: boolean;
 }) {
   const y = useTransform(progress, [0, 1], [...shot.parallax]);
   const scale = useTransform(progress, [0, 0.45, 1], [0.94, 1, 0.96]);
   const opacity = useTransform(progress, [0, 0.1, 0.9, 1], [0.45, 1, 1, 0.45]);
   const imgScale = useTransform(progress, [0, 0.5, 1], [1.1, 1.02, 1.12]);
+  const motionOff = reduceMotion || staticLayout;
 
   return (
     <motion.div
       className={`${shot.offsetClass} will-change-transform`}
-      style={reduceMotion ? undefined : { y, scale, opacity }}
+      style={motionOff ? undefined : { y, scale, opacity }}
     >
       <motion.div
         className="group relative overflow-hidden rounded-xs border border-border shadow-[var(--shadow-panel)]"
-        whileHover={reduceMotion ? undefined : { scale: 1.03 }}
+        whileHover={motionOff ? undefined : { scale: 1.03 }}
         transition={{ type: "spring", stiffness: 320, damping: 26 }}
       >
-        <div className="relative aspect-[3/4] w-full min-h-[320px] overflow-hidden sm:min-h-[360px] lg:min-h-[420px] xl:min-h-[480px]">
+        <div className="relative aspect-[3/4] w-full min-h-[240px] overflow-hidden sm:min-h-[280px] md:min-h-[360px] lg:min-h-[420px]">
           <motion.img
             src={shot.src}
             alt={shot.alt}
@@ -72,7 +87,7 @@ function GalleryTile({
             width={700}
             height={1000}
             className="absolute inset-0 h-full w-full object-cover"
-            style={reduceMotion ? undefined : { scale: imgScale }}
+            style={motionOff ? undefined : { scale: imgScale }}
           />
           <div className="absolute inset-0 bg-linear-to-t from-navy-deep/75 via-navy-deep/15 to-transparent" />
         </div>
@@ -84,14 +99,22 @@ function GalleryTile({
 function WhoWeAreGallery({
   progress,
   reduceMotion,
+  staticLayout,
 }: {
   progress: MotionValue<number>;
   reduceMotion: boolean | null;
+  staticLayout: boolean;
 }) {
   return (
-    <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-3 min-[480px]:gap-4 lg:gap-6">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3 md:gap-6">
       {shots.map((s) => (
-        <GalleryTile key={s.alt} shot={s} progress={progress} reduceMotion={reduceMotion} />
+        <GalleryTile
+          key={s.alt}
+          shot={s}
+          progress={progress}
+          reduceMotion={reduceMotion}
+          staticLayout={staticLayout}
+        />
       ))}
     </div>
   );
@@ -100,17 +123,20 @@ function WhoWeAreGallery({
 function CopyBlock({
   progress,
   reduceMotion,
+  staticLayout,
 }: {
   progress: MotionValue<number>;
   reduceMotion: boolean | null;
+  staticLayout: boolean;
 }) {
   const x = useTransform(progress, [0, 0.5, 1], [-32, 0, 32]);
   const blockOpacity = useTransform(progress, [0, 0.15, 0.85, 1], [0.5, 1, 1, 0.5]);
+  const motionOff = reduceMotion || staticLayout;
 
   return (
     <motion.div
-      className="lg:pr-4"
-      style={reduceMotion ? undefined : { x, opacity: blockOpacity }}
+      className="md:pr-4"
+      style={motionOff ? undefined : { x, opacity: blockOpacity }}
     >
       <motion.p
         className="eyebrow text-[0.72rem] tracking-[0.24em]"
@@ -159,6 +185,7 @@ function CopyBlock({
 export function WhoWeAre() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const staticLayout = useMaxPhone();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -168,11 +195,15 @@ export function WhoWeAre() {
   return (
     <section
       ref={sectionRef}
-      className="border-b border-border bg-navy-deep py-28 lg:py-36"
+      className="border-b border-border bg-navy-deep py-16 md:py-28 lg:py-36"
     >
-      <PageWrap className="grid gap-14 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:gap-20">
-        <CopyBlock progress={scrollYProgress} reduceMotion={reduceMotion} />
-        <WhoWeAreGallery progress={scrollYProgress} reduceMotion={reduceMotion} />
+      <PageWrap className="grid gap-10 md:grid-cols-[0.88fr_1.12fr] md:items-center md:gap-14 lg:gap-20">
+        <CopyBlock progress={scrollYProgress} reduceMotion={reduceMotion} staticLayout={staticLayout} />
+        <WhoWeAreGallery
+          progress={scrollYProgress}
+          reduceMotion={reduceMotion}
+          staticLayout={staticLayout}
+        />
       </PageWrap>
     </section>
   );

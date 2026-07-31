@@ -5,7 +5,7 @@ import { Reveal } from "./Reveal";
 
 export function Insights() {
   return (
-    <section id="insights" className="border-b border-border bg-navy-deep py-24">
+    <section id="insights" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24">
       <PageWrap>
         <Reveal>
           <p className="eyebrow">{insightsContent.eyebrow}</p>

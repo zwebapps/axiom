@@ -15,7 +15,7 @@ const icons = [Briefcase, Globe, Scale, Truck, TrendingUp, Landmark];
 
 export function Services() {
   return (
-    <section id="services" className="border-b border-border bg-navy-deep py-24">
+      <section id="services" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24">
       <PageWrap>
         <Reveal>
           <p className="eyebrow">{servicesContent.eyebrow}</p>

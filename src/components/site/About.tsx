@@ -6,7 +6,7 @@ import { Reveal } from "./Reveal";
 
 export function About() {
   return (
-    <section id="about" className="border-b border-border bg-navy py-24">
+    <section id="about" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
       <PageWrap className="grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>
           <Reveal>
