@@ -29,8 +29,15 @@ export const revealVariants: Record<RevealVariant, Variants> = {
       transition: visibleTransition(),
     },
   },
+  /**
+   * Horizontal travel is deliberately small. These variants start elements
+   * translated sideways, and on a narrow viewport a full-width column plus a
+   * large offset pushes past the edge and makes the whole page horizontally
+   * scrollable. `overflow-x: clip` on the root contains it, but keeping the
+   * distance modest means the layout doesn't depend on that clip.
+   */
   slideLeft: {
-    hidden: { opacity: 0, x: 72 },
+    hidden: { opacity: 0, x: 36 },
     visible: {
       opacity: 1,
       x: 0,
@@ -38,7 +45,7 @@ export const revealVariants: Record<RevealVariant, Variants> = {
     },
   },
   slideRight: {
-    hidden: { opacity: 0, x: -72 },
+    hidden: { opacity: 0, x: -36 },
     visible: {
       opacity: 1,
       x: 0,

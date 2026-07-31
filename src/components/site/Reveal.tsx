@@ -1,7 +1,14 @@
 "use client";
 
 import { motion, useInView, useReducedMotion, type HTMLMotionProps } from "motion/react";
-import { useRef, type CSSProperties, type ReactNode, type AriaAttributes } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type AriaAttributes,
+} from "react";
 
 import {
   inViewOptions,
@@ -18,6 +25,31 @@ const motionTags = {
   span: motion.span,
   article: motion.article,
 } as const;
+
+const NARROW = "(max-width: 767px)";
+
+/**
+ * On viewports below `md`, horizontal slides are mapped to `rise` so content
+ * doesn't sit off-screen in a single column.
+ *
+ * SSR and the first client paint must use the same resolved variant. Do not
+ * read `window` in the `useState` initializer — the server has no viewport,
+ * which caused slideRight (server) vs rise (client) hydration mismatches.
+ */
+function useResponsiveVariant(variant: RevealVariant): RevealVariant {
+  const [narrow, setNarrow] = useState(true);
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(NARROW);
+    const update = () => setNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  if (narrow && (variant === "slideLeft" || variant === "slideRight")) return "rise";
+  return variant;
+}
 
 function useScrollReveal() {
   const ref = useRef<HTMLElement | null>(null);
@@ -43,6 +75,7 @@ export function Reveal({
   variant?: RevealVariant;
 }) {
   const { ref, show, reduceMotion } = useScrollReveal();
+  const resolved = useResponsiveVariant(variant);
   // All entries render the same prop shape; widening to the div component
   // lets one `HTMLMotionProps<"div">` object serve every tag.
   const Tag = motionTags[as] as typeof motion.div;
@@ -57,7 +90,7 @@ export function Reveal({
   }
 
   const transition =
-    variant === "pop"
+    resolved === "pop"
       ? { type: "spring" as const, stiffness: 440, damping: 26, delay: delay / 1000 }
       : revealTransition(delay);
 
@@ -67,7 +100,7 @@ export function Reveal({
     style,
     initial: "hidden",
     animate: show ? "visible" : "hidden",
-    variants: revealVariants[variant],
+    variants: revealVariants[resolved],
     transition,
   };
 
@@ -137,13 +170,14 @@ export function RevealItem({
   variant?: RevealVariant;
 }) {
   const reduceMotion = useReducedMotion();
+  const resolved = useResponsiveVariant(variant);
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
   return (
-    <motion.div className={className} variants={revealVariants[variant]}>
+    <motion.div className={className} variants={revealVariants[resolved]}>
       {children}
     </motion.div>
   );
