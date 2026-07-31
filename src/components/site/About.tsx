@@ -1,30 +1,32 @@
+"use client";
+
 import { ArrowRight, Check, Play } from "lucide-react";
 import boardroom from "@/assets/boardroom.jpg";
 import { about } from "@/content/site";
 import { PageWrap } from "./PageWrap";
-import { Reveal } from "./Reveal";
+import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 
 export function About() {
   return (
     <section id="about" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
       <PageWrap className="grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>
-          <Reveal>
+          <Reveal variant="blur">
             <p className="eyebrow">{about.eyebrow}</p>
           </Reveal>
-          <Reveal delay={100}>
+          <Reveal delay={90} variant="slideRight">
             <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
               {about.title}
             </h2>
           </Reveal>
-          <Reveal delay={180}>
+          <Reveal delay={160} variant="rise">
             <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-muted-foreground">
               {about.body}
             </p>
           </Reveal>
           <ul className="mt-8 space-y-4">
             {about.points.map((p, i) => (
-              <Reveal as="li" key={p} delay={240 + i * 90}>
+              <Reveal as="li" key={p} delay={i * 80} variant="slideRight">
                 <span className="flex items-center gap-3 text-sm text-foreground">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full border border-gold/50 text-gold">
                     <Check size={11} strokeWidth={3} />
@@ -34,17 +36,17 @@ export function About() {
               </Reveal>
             ))}
           </ul>
-          <div className="mt-12 grid grid-cols-3 gap-6">
-            {about.figures.map((f, i) => (
-              <Reveal key={f.label} delay={i * 120}>
+          <RevealStagger className="mt-12 grid grid-cols-3 gap-6" stagger={0.12}>
+            {about.figures.map((f) => (
+              <RevealItem key={f.label} variant="scale">
                 <div className="font-display text-3xl text-gold">{f.value}</div>
                 <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
-              </Reveal>
+              </RevealItem>
             ))}
-          </div>
+          </RevealStagger>
         </div>
 
-        <Reveal delay={160}>
+        <Reveal delay={140} variant="slideLeft">
           <div className="relative">
             <div className="group relative overflow-hidden rounded-xs border border-border">
               <img
@@ -76,14 +78,14 @@ export function About() {
       </PageWrap>
 
       <PageWrap className="mt-16">
-        <Reveal>
-        <a href="#services" className="group inline-flex items-center gap-2 text-[13px] text-gold">
-          {about.link}
-          <ArrowRight
-            size={15}
-            className="transition-transform duration-300 group-hover:translate-x-1.5"
-          />
-        </a>
+        <Reveal variant="fade">
+          <a href="#services" className="group inline-flex items-center gap-2 text-[13px] text-gold">
+            {about.link}
+            <ArrowRight
+              size={15}
+              className="transition-transform duration-300 group-hover:translate-x-1.5"
+            />
+          </a>
         </Reveal>
       </PageWrap>
     </section>

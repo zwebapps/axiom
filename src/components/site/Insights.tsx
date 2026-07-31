@@ -1,24 +1,26 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import { insights as insightsContent } from "@/content/site";
 import { PageWrap } from "./PageWrap";
-import { Reveal } from "./Reveal";
+import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 
 export function Insights() {
   return (
     <section id="insights" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24">
       <PageWrap>
-        <Reveal>
+        <Reveal variant="blur">
           <p className="eyebrow">{insightsContent.eyebrow}</p>
         </Reveal>
-        <Reveal delay={100}>
+        <Reveal delay={90} variant="rise">
           <h2 className="mt-5 max-w-xl font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
             {insightsContent.title}
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {insightsContent.posts.map((post, i) => (
-            <Reveal key={post.title} delay={i * 100}>
+        <RevealStagger className="mt-14 grid gap-5 md:grid-cols-3" stagger={0.12}>
+          {insightsContent.posts.map((post) => (
+            <RevealItem key={post.title} variant="slideLeft">
               <article className="panel group flex h-full flex-col rounded-xs p-7 transition-all duration-500 hover:-translate-y-1 hover:border-gold/45">
                 <p className="text-[11px] tracking-[0.18em] text-gold uppercase">{post.tag}</p>
                 <h3 className="mt-4 font-display text-xl text-foreground">{post.title}</h3>
@@ -33,9 +35,9 @@ export function Insights() {
                   />
                 </span>
               </article>
-            </Reveal>
+            </RevealItem>
           ))}
-        </div>
+        </RevealStagger>
       </PageWrap>
     </section>
   );

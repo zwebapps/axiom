@@ -1,49 +1,141 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+"use client";
+
+import { motion, useReducedMotion, type HTMLMotionProps } from "motion/react";
+import type { CSSProperties, ReactNode, AriaAttributes } from "react";
+
+import {
+  revealTransition,
+  revealVariants,
+  viewportEnter,
+  type RevealVariant,
+} from "@/lib/motion-presets";
+
+const motionTags = {
+  div: motion.div,
+  section: motion.section,
+  li: motion.li,
+  span: motion.span,
+  article: motion.article,
+} as const;
 
 export function Reveal({
   children,
   delay = 0,
   className = "",
   style,
-  as: Tag = "div",
+  as = "div",
+  variant = "rise",
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
-  style?: React.CSSProperties;
-  as?: "div" | "section" | "li" | "span" | "article";
+  style?: CSSProperties;
+  as?: keyof typeof motionTags;
+  variant?: RevealVariant;
 }) {
+  const reduceMotion = useReducedMotion();
+  const Tag = motionTags[as];
 
-  const ref = useRef<HTMLElement | null>(null);
-  const [shown, setShown] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setShown(true);
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -60px" },
+  if (reduceMotion) {
+    const Plain = as;
+    return (
+      <Plain className={className} style={style}>
+        {children}
+      </Plain>
     );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  }
 
-  const Comp = Tag as any;
+  const transition =
+    variant === "pop"
+      ? { type: "spring" as const, stiffness: 440, damping: 26, delay: delay / 1000 }
+      : revealTransition(delay);
+
+  const motionProps: HTMLMotionProps<"div"> = {
+    className,
+    style,
+    initial: "hidden",
+    whileInView: "visible",
+    viewport: viewportEnter,
+    variants: revealVariants[variant],
+    transition,
+  };
+
+  return <Tag {...motionProps}>{children}</Tag>;
+}
+
+export function RevealStagger({
+  children,
+  className = "",
+  style,
+  stagger = 0.1,
+  delayChildren = 0.06,
+  id,
+  as = "div",
+  ...rest
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  stagger?: number;
+  delayChildren?: number;
+  id?: string;
+  as?: "div" | "section";
+} & AriaAttributes) {
+  const reduceMotion = useReducedMotion();
+  const MotionTag = as === "section" ? motion.section : motion.div;
+  const PlainTag = as;
+
+  if (reduceMotion) {
+    return (
+      <PlainTag id={id} className={className} style={style} {...rest}>
+        {children}
+      </PlainTag>
+    );
+  }
+
   return (
-    <Comp
-      ref={ref as any}
-      data-shown={shown}
-      style={{ ...style, transitionDelay: `${delay}ms` }}
-      className={`reveal ${className}`}
+    <MotionTag
+      id={id}
+      className={className}
+      style={style}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportEnter}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: { staggerChildren: stagger, delayChildren },
+        },
+      }}
+      {...rest}
     >
       {children}
-    </Comp>
+    </MotionTag>
+  );
+}
+
+export function RevealItem({
+  children,
+  className = "",
+  variant = "rise",
+}: {
+  children: ReactNode;
+  className?: string;
+  variant?: RevealVariant;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      className={className}
+      variants={revealVariants[variant]}
+      transition={variant === "pop" ? { type: "spring", stiffness: 440, damping: 26 } : revealTransition(0)}
+    >
+      {children}
+    </motion.div>
   );
 }

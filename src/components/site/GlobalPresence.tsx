@@ -1,7 +1,12 @@
+"use client";
+
 import { ChevronRight, MapPin } from "lucide-react";
-import { globalPresence as globalContent } from "@/content/site";
+import { motion, useReducedMotion } from "motion/react";
+
+import { viewportEnter } from "@/lib/motion-presets";
+
 import { PageWrap } from "./PageWrap";
-import { Reveal } from "./Reveal";
+import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 
 const pins = [
   { x: 22, y: 34 },
@@ -13,21 +18,56 @@ const pins = [
   { x: 80, y: 68 },
 ];
 
+function MapPins() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <>
+      {pins.map((p, i) => (
+        <motion.span
+          key={i}
+          className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-gold"
+          style={{ left: `${p.x}%`, top: `${p.y}%` }}
+          initial={reduceMotion ? false : { opacity: 0, scale: 0 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+          viewport={viewportEnter}
+          transition={
+            reduceMotion
+              ? undefined
+              : {
+                  type: "spring",
+                  stiffness: 480,
+                  damping: 22,
+                  delay: 0.15 + i * 0.08,
+                }
+          }
+        >
+          <span
+            className="pulse-gold absolute h-2 w-2 rounded-full bg-gold"
+            style={reduceMotion ? undefined : { animation: `float-y ${5 + i}s ease-in-out infinite` }}
+          />
+          <MapPin size={16} className="relative opacity-80" />
+        </motion.span>
+      ))}
+    </>
+  );
+}
+
 export function GlobalPresence() {
   return (
     <section id="global" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
       <PageWrap>
-        <Reveal>
+        <Reveal variant="blur">
           <p className="eyebrow">{globalContent.eyebrow}</p>
         </Reveal>
-        <Reveal delay={100}>
+        <Reveal delay={80} variant="rise">
           <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
             {globalContent.title}
           </h2>
         </Reveal>
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
-          <Reveal>
+          <Reveal variant="slideRight">
             <div className="relative aspect-16/9 w-full overflow-hidden rounded-xs border border-border bg-navy-deep">
               <div
                 className="absolute inset-0 opacity-40"
@@ -45,29 +85,16 @@ export function GlobalPresence() {
                   WebkitMaskRepeat: "no-repeat",
                 }}
               />
-              {pins.map((p, i) => (
-                <span
-                  key={i}
-                  className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-gold"
-                  style={{
-                    left: `${p.x}%`,
-                    top: `${p.y}%`,
-                    animation: `float-y ${5 + i}s ease-in-out infinite`,
-                  }}
-                >
-                  <span className="pulse-gold absolute h-2 w-2 rounded-full bg-gold" />
-                  <MapPin size={16} className="relative opacity-80" />
-                </span>
-              ))}
+              <MapPins />
             </div>
           </Reveal>
 
-          <Reveal delay={140}>
+          <Reveal delay={120} variant="slideLeft">
             <div className="panel rounded-xs p-6">
               <h3 className="font-display text-lg text-gold">{globalContent.regionsTitle}</h3>
-              <ul className="mt-5 space-y-3">
+              <RevealStagger className="mt-5 space-y-3" stagger={0.06}>
                 {globalContent.regions.map((r) => (
-                  <li key={r}>
+                  <RevealItem key={r}>
                     <button
                       type="button"
                       className="group flex w-full items-center justify-between rounded-xs border border-border bg-navy-deep/60 px-4 py-3 text-left text-[13px] text-foreground transition-colors duration-300 hover:border-gold/60"
@@ -81,25 +108,25 @@ export function GlobalPresence() {
                         className="text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-gold"
                       />
                     </button>
-                  </li>
+                  </RevealItem>
                 ))}
-              </ul>
+              </RevealStagger>
             </div>
           </Reveal>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 rounded-xs border border-border lg:grid-cols-4">
+        <RevealStagger className="mt-10 grid grid-cols-2 rounded-xs border border-border lg:grid-cols-4" stagger={0.1}>
           {globalContent.figures.map((f, i) => (
-            <Reveal
+            <RevealItem
               key={f.label}
-              delay={i * 100}
               className={`px-6 py-7 text-center ${i > 0 ? "lg:hairline-x" : ""}`}
+              variant="scale"
             >
               <div className="font-display text-3xl text-foreground">{f.value}</div>
               <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
-            </Reveal>
+            </RevealItem>
           ))}
-        </div>
+        </RevealStagger>
       </PageWrap>
     </section>
   );

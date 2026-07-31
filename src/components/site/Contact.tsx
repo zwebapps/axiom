@@ -88,20 +88,20 @@ export function Contact() {
     >
       <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
         <div>
-          <Reveal>
+          <Reveal variant="blur">
             <p className="eyebrow">{contactContent.eyebrow}</p>
           </Reveal>
-          <Reveal delay={100}>
+          <Reveal delay={90} variant="slideRight">
             <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light leading-[1.12]">
               {contactContent.title}
             </h2>
           </Reveal>
-          <Reveal delay={180}>
+          <Reveal delay={160} variant="rise">
             <p className="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground">
               {contactContent.description}
             </p>
           </Reveal>
-          <Reveal delay={260}>
+          <Reveal delay={220} variant="scale">
             <a
               href={`mailto:${contactContent.email}`}
               className="mt-10 inline-flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
@@ -114,7 +114,7 @@ export function Contact() {
           </Reveal>
         </div>
 
-        <Reveal delay={120}>
+        <Reveal delay={100} variant="slideLeft">
           <div className="relative overflow-hidden rounded-xs border border-border/80 bg-linear-to-br from-navy via-navy-deep/95 to-navy shadow-[var(--shadow-panel)]">
             <span
               className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/80 to-transparent"

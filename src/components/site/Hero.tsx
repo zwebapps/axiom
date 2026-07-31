@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { heroClientLogos, heroCorridors } from "@/content/site";
+import { easeLux } from "@/lib/motion-presets";
 import { HeroClientLogo } from "./HeroClientLogo";
+import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 
 import "@/styles/axiom-hero.css";
 
@@ -14,6 +17,92 @@ declare global {
 }
 
 const DESKTOP_HERO_MQ = "(min-width: 768px)";
+
+function HeroCopy() {
+  const reduceMotion = useReducedMotion();
+  const line = reduceMotion
+    ? undefined
+    : {
+        hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
+        show: {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          transition: { duration: 0.85, ease: easeLux },
+        },
+      };
+
+  const container = reduceMotion
+    ? undefined
+    : {
+        hidden: {},
+        show: { transition: { staggerChildren: 0.11, delayChildren: 0.2 } },
+      };
+
+  if (reduceMotion) {
+    return (
+      <div className="hero__copy">
+        <span className="eyebrow">Global business. Limitless opportunities.</span>
+        <h1>
+          <span>Building Businesses.</span>
+          <span>Creating Value.</span>
+          <span className="accent">Across Continents.</span>
+        </h1>
+        <p className="lede">
+          Axiom Vertex Group partners with ambitious organizations to transform opportunities into
+          sustainable growth across global markets.
+        </p>
+        <div className="hero__cta">
+          <a className="btn btn--gold" href="#contact">
+            Book Strategy Session
+            <ArrowIcon />
+          </a>
+          <a className="btn btn--outline hero__cta-secondary" href="#global">
+            Explore Global Presence
+            <span className="play" aria-hidden="true">
+              <svg width="7" height="8" viewBox="0 0 7 8">
+                <path d="M0 0l7 4-7 4z" fill="currentColor" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div className="hero__copy" variants={container} initial="hidden" animate="show">
+      <motion.span className="eyebrow" variants={line}>
+        Global business. Limitless opportunities.
+      </motion.span>
+      <motion.h1>
+        <motion.span variants={line}>Building Businesses.</motion.span>
+        <motion.span variants={line}>Creating Value.</motion.span>
+        <motion.span className="accent" variants={line}>
+          Across Continents.
+        </motion.span>
+      </motion.h1>
+      <motion.p className="lede" variants={line}>
+        Axiom Vertex Group partners with ambitious organizations to transform opportunities into
+        sustainable growth across global markets.
+      </motion.p>
+      <motion.div className="hero__cta" variants={line}>
+        <a className="btn btn--gold" href="#contact">
+          Book Strategy Session
+          <ArrowIcon />
+        </a>
+        <a className="btn btn--outline hero__cta-secondary" href="#global">
+          Explore Global Presence
+          <span className="play" aria-hidden="true">
+            <svg width="7" height="8" viewBox="0 0 7 8">
+              <path d="M0 0l7 4-7 4z" fill="currentColor" />
+            </svg>
+          </span>
+        </a>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 function ArrowIcon() {
   return (
@@ -76,32 +165,7 @@ export function Hero() {
         </div>
         <div className="hero__scrim" aria-hidden="true" />
 
-        <div className="hero__copy">
-          <span className="eyebrow">Global business. Limitless opportunities.</span>
-          <h1>
-            <span>Building Businesses.</span>
-            <span>Creating Value.</span>
-            <span className="accent">Across Continents.</span>
-          </h1>
-          <p className="lede">
-            Axiom Vertex Group partners with ambitious organizations to transform opportunities into
-            sustainable growth across global markets.
-          </p>
-          <div className="hero__cta">
-            <a className="btn btn--gold" href="#contact">
-              Book Strategy Session
-              <ArrowIcon />
-            </a>
-            <a className="btn btn--outline hero__cta-secondary" href="#global">
-              Explore Global Presence
-              <span className="play" aria-hidden="true">
-                <svg width="7" height="8" viewBox="0 0 7 8">
-                  <path d="M0 0l7 4-7 4z" fill="currentColor" />
-                </svg>
-              </span>
-            </a>
-          </div>
-        </div>
+        <HeroCopy />
 
         <div className="hero__bottom">
           <div className="hint">
@@ -180,16 +244,25 @@ export function Hero() {
       </section>
 
       <section className="clients clients--desktop">
-        <span className="eyebrow">Trusted by forward-thinking organizations</span>
-        <div className="clients__row" id="clients">
+        <Reveal variant="blur">
+          <span className="eyebrow">Trusted by forward-thinking organizations</span>
+        </Reveal>
+        <RevealStagger className="clients__row" stagger={0.07} id="clients">
           {heroClientLogos.map((id) => (
-            <HeroClientLogo key={id} id={id} />
+            <RevealItem key={id}>
+              <HeroClientLogo id={id} />
+            </RevealItem>
           ))}
-        </div>
+        </RevealStagger>
       </section>
 
-      <section className="stats" aria-label="Key figures">
-        <div className="stat">
+      <RevealStagger
+        className="stats"
+        aria-label="Key figures"
+        stagger={0.12}
+        as="section"
+      >
+        <RevealItem className="stat" variant="scale">
           <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
             <circle cx="15" cy="12" r="7" stroke="currentColor" strokeWidth="1.2" />
             <path
@@ -203,8 +276,8 @@ export function Hero() {
             <div className="stat__num">15+</div>
             <div className="stat__lbl">Years of Excellence</div>
           </div>
-        </div>
-        <div className="stat">
+        </RevealItem>
+        <RevealItem className="stat" variant="scale">
           <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
             <rect x="2.6" y="4" width="24.8" height="22" rx="3" stroke="currentColor" strokeWidth="1.2" />
             <path d="M7.5 20.5l4.5-5 3.6 3 6.4-8" stroke="currentColor" strokeWidth="1.4" />
@@ -214,8 +287,8 @@ export function Hero() {
             <div className="stat__num">£2B+</div>
             <div className="stat__lbl">Value Delivered</div>
           </div>
-        </div>
-        <div className="stat">
+        </RevealItem>
+        <RevealItem className="stat" variant="scale">
           <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
             <circle cx="15" cy="15" r="12" stroke="currentColor" strokeWidth="1.2" />
             <ellipse cx="15" cy="15" rx="5" ry="12" stroke="currentColor" strokeWidth="1.2" />
@@ -225,8 +298,8 @@ export function Hero() {
             <div className="stat__num">40+</div>
             <div className="stat__lbl">Markets Served</div>
           </div>
-        </div>
-        <div className="stat">
+        </RevealItem>
+        <RevealItem className="stat" variant="scale">
           <svg className="stat__ico" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
             <circle cx="11" cy="10.5" r="4.4" stroke="currentColor" strokeWidth="1.2" />
             <circle cx="21.5" cy="12" r="3.4" stroke="currentColor" strokeWidth="1.2" opacity=".7" />
@@ -237,8 +310,8 @@ export function Hero() {
             <div className="stat__num">100+</div>
             <div className="stat__lbl">Global Partners</div>
           </div>
-        </div>
-      </section>
+        </RevealItem>
+      </RevealStagger>
     </div>
   );
 }
