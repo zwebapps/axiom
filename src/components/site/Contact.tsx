@@ -242,10 +242,10 @@ export function Contact() {
                   </Field>
 
                   <div className="border-t border-border/50 pt-6">
-                    <div className="flex justify-end">
+                    <div className="flex sm:justify-end">
                     <button
                       type="submit"
-                      className="btn-gold group px-8"
+                      className="btn-gold group w-full justify-center px-8 sm:w-auto"
                     >
                       {contactContent.submit}
                       <ArrowRight
