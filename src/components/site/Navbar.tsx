@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Logo } from "./Logo";
 
 const links = [
@@ -15,6 +16,7 @@ const links = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -27,21 +29,21 @@ export function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "border-b border-border bg-navy-deep/85 py-3 backdrop-blur-xl"
-          : "border-b border-transparent py-6"
+          ? "border-b border-border bg-navy-deep/90 py-3 backdrop-blur-xl"
+          : "border-b border-transparent bg-linear-to-b from-navy-deep/80 to-transparent py-5 lg:py-6"
       }`}
     >
-      <div className="mx-auto flex max-w-[1360px] items-center justify-between px-6">
-        <a href="#home" aria-label="Axiom Vertex Group home">
-          <Logo />
+      <div className="mx-auto grid max-w-[1360px] grid-cols-[1fr_auto] items-center gap-4 px-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+        <a href="#home" aria-label="Axiom Vertex Group home" className="justify-self-start">
+          <Logo compact={isMobile} animate={false} />
         </a>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center justify-center gap-7 lg:flex">
           {links.map((l) => (
             <a
               key={l.label}
               href={l.href}
-              className="group relative text-[13px] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+              className="group relative text-[13px] tracking-wide text-muted-foreground transition-colors duration-300 hover:text-foreground"
             >
               {l.label}
               <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
@@ -49,14 +51,15 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-end gap-3">
           <a
             href="#contact"
-            className="hidden rounded-xs bg-linear-to-r from-gold-deep via-gold-soft to-gold-deep px-6 py-3 text-[13px] font-medium text-navy-deep transition-all duration-300 hover:shadow-[var(--shadow-gold)] sm:inline-block"
+            className="btn-gold hidden sm:inline-flex"
           >
             Book Strategy Session
           </a>
           <button
+            type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
             className="text-gold lg:hidden"

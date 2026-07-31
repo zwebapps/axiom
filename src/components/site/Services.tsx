@@ -65,7 +65,7 @@ export function Services() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xs border border-gold/40 text-gold transition-colors duration-500 group-hover:bg-gold group-hover:text-navy-deep">
                   <s.icon size={19} strokeWidth={1.4} />
                 </span>
-                <h3 className="mt-5 font-display text-xl text-gold">
+                <h3 className="mt-5 font-sans text-[15px] font-semibold tracking-wide text-gold uppercase">
                   {s.title}
                 </h3>
                 <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
@@ -79,7 +79,7 @@ export function Services() {
         <Reveal delay={120} className="mt-12 flex justify-center">
           <a
             href="#contact"
-            className="group inline-flex items-center gap-3 rounded-xs bg-linear-to-r from-gold-deep via-gold-soft to-gold-deep px-7 py-3.5 text-[13px] font-medium text-navy-deep transition-shadow duration-300 hover:shadow-[var(--shadow-gold)]"
+            className="group inline-flex items-center gap-3 rounded-full bg-linear-to-r from-gold-deep via-gold-soft to-gold-deep px-7 py-3.5 text-[13px] font-medium text-navy-deep transition-shadow duration-300 hover:shadow-[var(--shadow-gold)]"
           >
             Explore All Services
             <ArrowRight

@@ -5,6 +5,7 @@ import { Footer } from "@/components/site/Footer";
 import { GlobalPresence } from "@/components/site/GlobalPresence";
 import { Hero } from "@/components/site/Hero";
 import { Industries } from "@/components/site/Industries";
+import { Insights } from "@/components/site/Insights";
 import { Navbar } from "@/components/site/Navbar";
 import { Services } from "@/components/site/Services";
 import { WhoWeAre } from "@/components/site/WhoWeAre";
@@ -21,8 +22,9 @@ function HomePage() {
       <WhoWeAre />
       <About />
       <Services />
-      <Industries />
       <GlobalPresence />
+      <Industries />
+      <Insights />
       <Footer />
     </>
   );

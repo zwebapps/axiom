@@ -1,6 +1,6 @@
 # Axiom Vertex Group (Demo Theme)
 
-Corporate marketing site built with **TanStack Start**, **React 19**, **TypeScript**, and **Tailwind CSS v4** (Lovable export).
+Corporate marketing site built with **TanStack Start**, **React 19**, **TypeScript**, and **Tailwind CSS v4**. Brand colors and typography are documented in [docs/THEME.md](docs/THEME.md).
 
 ## Getting started
 

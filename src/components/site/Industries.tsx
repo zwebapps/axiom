@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   Zap,
 } from "lucide-react";
+import { LogoMark } from "./LogoMark";
 import { Reveal } from "./Reveal";
 
 const industries = [
@@ -42,13 +43,7 @@ export function Industries() {
 
           <Reveal className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <span className="pulse-gold flex h-24 w-24 items-center justify-center rounded-full border border-gold/50 bg-navy">
-              <svg viewBox="0 0 48 44" className="h-10 w-11" fill="none">
-                <path
-                  d="M24 2 46 42H34L24 20 14 42H2L24 2Z"
-                  fill="oklch(0.79 0.115 82)"
-                />
-                <path d="M24 24 32 42H16L24 24Z" fill="oklch(0.2 0.035 258)" />
-              </svg>
+              <LogoMark animate={false} className="h-10 w-11" />
             </span>
           </Reveal>
 
