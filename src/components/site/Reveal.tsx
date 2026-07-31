@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion, type HTMLMotionProps } from "motion/react";
-import type { CSSProperties, ReactNode, AriaAttributes } from "react";
+import { motion, useInView, useReducedMotion, type HTMLMotionProps } from "motion/react";
+import { useRef, type CSSProperties, type ReactNode, type AriaAttributes } from "react";
 
 import {
+  inViewOptions,
   revealTransition,
   revealVariants,
-  viewportEnter,
+  staggerContainer,
   type RevealVariant,
 } from "@/lib/motion-presets";
 
@@ -17,6 +18,14 @@ const motionTags = {
   span: motion.span,
   article: motion.article,
 } as const;
+
+function useScrollReveal() {
+  const ref = useRef<HTMLElement | null>(null);
+  const inView = useInView(ref, inViewOptions);
+  const reduceMotion = useReducedMotion();
+  const show = reduceMotion || inView;
+  return { ref, show, reduceMotion };
+}
 
 export function Reveal({
   children,
@@ -33,7 +42,7 @@ export function Reveal({
   as?: keyof typeof motionTags;
   variant?: RevealVariant;
 }) {
-  const reduceMotion = useReducedMotion();
+  const { ref, show, reduceMotion } = useScrollReveal();
   const Tag = motionTags[as];
 
   if (reduceMotion) {
@@ -51,11 +60,11 @@ export function Reveal({
       : revealTransition(delay);
 
   const motionProps: HTMLMotionProps<"div"> = {
+    ref: ref as React.RefObject<HTMLDivElement>,
     className,
     style,
     initial: "hidden",
-    whileInView: "visible",
-    viewport: viewportEnter,
+    animate: show ? "visible" : "hidden",
     variants: revealVariants[variant],
     transition,
   };
@@ -67,8 +76,8 @@ export function RevealStagger({
   children,
   className = "",
   style,
-  stagger = 0.1,
-  delayChildren = 0.06,
+  stagger = 0.14,
+  delayChildren = 0.04,
   id,
   as = "div",
   ...rest
@@ -81,6 +90,8 @@ export function RevealStagger({
   id?: string;
   as?: "div" | "section";
 } & AriaAttributes) {
+  const ref = useRef<HTMLElement | null>(null);
+  const inView = useInView(ref, inViewOptions);
   const reduceMotion = useReducedMotion();
   const MotionTag = as === "section" ? motion.section : motion.div;
   const PlainTag = as;
@@ -95,14 +106,14 @@ export function RevealStagger({
 
   return (
     <MotionTag
+      ref={ref as React.RefObject<HTMLDivElement>}
       id={id}
       className={className}
       style={style}
       initial="hidden"
-      whileInView="visible"
-      viewport={viewportEnter}
+      animate={inView ? "visible" : "hidden"}
       variants={{
-        hidden: {},
+        ...staggerContainer,
         visible: {
           transition: { staggerChildren: stagger, delayChildren },
         },
@@ -130,11 +141,7 @@ export function RevealItem({
   }
 
   return (
-    <motion.div
-      className={className}
-      variants={revealVariants[variant]}
-      transition={variant === "pop" ? { type: "spring", stiffness: 440, damping: 26 } : revealTransition(0)}
-    >
+    <motion.div className={className} variants={revealVariants[variant]}>
       {children}
     </motion.div>
   );

@@ -5,25 +5,14 @@ import boardroom from "@/assets/boardroom.jpg";
 import { about } from "@/content/site";
 import { PageWrap } from "./PageWrap";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
+import { SectionIntro } from "./SectionIntro";
 
 export function About() {
   return (
     <section id="about" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
       <PageWrap className="grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>
-          <Reveal variant="blur">
-            <p className="eyebrow">{about.eyebrow}</p>
-          </Reveal>
-          <Reveal delay={90} variant="slideRight">
-            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
-              {about.title}
-            </h2>
-          </Reveal>
-          <Reveal delay={160} variant="rise">
-            <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-muted-foreground">
-              {about.body}
-            </p>
-          </Reveal>
+          <SectionIntro eyebrow={about.eyebrow} title={about.title} description={about.body} />
           <ul className="mt-8 space-y-4">
             {about.points.map((p, i) => (
               <Reveal as="li" key={p} delay={i * 80} variant="slideRight">

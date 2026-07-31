@@ -7,6 +7,7 @@ import { contact as contactContent } from "@/content/site";
 
 import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
+import { SectionIntro } from "./SectionIntro";
 
 type FieldErrors = Partial<Record<"name" | "email" | "message", string>>;
 
@@ -88,19 +89,13 @@ export function Contact() {
     >
       <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
         <div>
-          <Reveal variant="blur">
-            <p className="eyebrow">{contactContent.eyebrow}</p>
-          </Reveal>
-          <Reveal delay={90} variant="slideRight">
-            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light leading-[1.12]">
-              {contactContent.title}
-            </h2>
-          </Reveal>
-          <Reveal delay={160} variant="rise">
-            <p className="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground">
-              {contactContent.description}
-            </p>
-          </Reveal>
+          <SectionIntro
+            eyebrow={contactContent.eyebrow}
+            title={contactContent.title}
+            description={contactContent.description}
+            titleClassName="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light leading-[1.12]"
+            descriptionClassName="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground"
+          />
           <Reveal delay={220} variant="scale">
             <a
               href={`mailto:${contactContent.email}`}

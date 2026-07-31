@@ -4,6 +4,7 @@ import { ArrowRight, Building2, Cpu, Factory, HeartPulse, Landmark, ShoppingBag,
 import { industries as industriesContent, brand, logos } from "@/content/site";
 import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
+import { SectionIntro } from "./SectionIntro";
 
 const industryIcons: Record<string, typeof HeartPulse> = {
   Healthcare: HeartPulse,
@@ -24,16 +25,12 @@ export function Industries() {
   return (
     <section id="industries" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:hidden">
       <PageWrap>
-        <div className="mx-auto max-w-xl text-center">
-          <Reveal variant="blur">
-            <p className="eyebrow">{industriesContent.eyebrow}</p>
-          </Reveal>
-          <Reveal delay={90} variant="scale">
-            <h2 className="mt-4 font-display text-[clamp(1.75rem,7vw,2.25rem)] font-light leading-tight">
-              {industriesContent.title}
-            </h2>
-          </Reveal>
-        </div>
+        <SectionIntro
+          align="center"
+          eyebrow={industriesContent.eyebrow}
+          title={industriesContent.title}
+          titleClassName="mt-4 font-display text-[clamp(1.75rem,7vw,2.25rem)] font-light leading-tight"
+        />
 
         <div className="relative mx-auto mt-10 aspect-square w-full max-w-[min(100%,340px)]">
           <span className="absolute inset-[18%] rounded-full border border-border" />

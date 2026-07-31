@@ -1,12 +1,15 @@
 "use client";
 
 import { ChevronRight, MapPin } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
+import { useRef } from "react";
 
-import { viewportEnter } from "@/lib/motion-presets";
+import { globalPresence as globalContent } from "@/content/site";
+import { inViewOptions } from "@/lib/motion-presets";
 
 import { PageWrap } from "./PageWrap";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
+import { SectionIntro } from "./SectionIntro";
 
 const pins = [
   { x: 22, y: 34 },
@@ -20,17 +23,18 @@ const pins = [
 
 function MapPins() {
   const reduceMotion = useReducedMotion();
+  const ref = useRef(null);
+  const inView = useInView(ref, inViewOptions);
 
   return (
-    <>
+    <div ref={ref} className="contents">
       {pins.map((p, i) => (
         <motion.span
           key={i}
           className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-gold"
           style={{ left: `${p.x}%`, top: `${p.y}%` }}
           initial={reduceMotion ? false : { opacity: 0, scale: 0 }}
-          whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-          viewport={viewportEnter}
+          animate={reduceMotion || inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
           transition={
             reduceMotion
               ? undefined
@@ -49,7 +53,7 @@ function MapPins() {
           <MapPin size={16} className="relative opacity-80" />
         </motion.span>
       ))}
-    </>
+    </div>
   );
 }
 
@@ -57,14 +61,7 @@ export function GlobalPresence() {
   return (
     <section id="global" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
       <PageWrap>
-        <Reveal variant="blur">
-          <p className="eyebrow">{globalContent.eyebrow}</p>
-        </Reveal>
-        <Reveal delay={80} variant="rise">
-          <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
-            {globalContent.title}
-          </h2>
-        </Reveal>
+        <SectionIntro eyebrow={globalContent.eyebrow} title={globalContent.title} />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
           <Reveal variant="slideRight">

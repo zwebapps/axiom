@@ -12,6 +12,7 @@ import {
 import { services as servicesContent } from "@/content/site";
 import { PageWrap } from "./PageWrap";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
+import { SectionIntro } from "./SectionIntro";
 
 const icons = [Briefcase, Globe, Scale, Truck, TrendingUp, Landmark];
 
@@ -19,14 +20,7 @@ export function Services() {
   return (
     <section id="services" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24">
       <PageWrap>
-        <Reveal variant="blur">
-          <p className="eyebrow">{servicesContent.eyebrow}</p>
-        </Reveal>
-        <Reveal delay={90} variant="rise">
-          <h2 className="mt-5 max-w-xl font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.14] font-light whitespace-pre-line">
-            {servicesContent.title}
-          </h2>
-        </Reveal>
+        <SectionIntro eyebrow={servicesContent.eyebrow} title={servicesContent.title} />
 
         <RevealStagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={0.09}>
           {servicesContent.items.map((s, i) => {
