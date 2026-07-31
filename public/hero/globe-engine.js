@@ -95,14 +95,60 @@ function setBasis(){
 }
 setBasis();
 const nodeV = NODES.map(n=>unit(n.lon,n.lat));
+/* Per destination — tuned to hero mock (Figma): UK low Atlantic hop, DE slightly
+   higher, Gulf routes sweep with their own apex, Pakistan on a separate arc. */
+const ARC_TUNING = {
+  UK: { lift: 0.044, bend: 0.009, spread: -0.026, sign:  1, phase: 0.00 },
+  DE: { lift: 0.056, bend: 0.022, spread: -0.012, sign:  1, phase: 0.24 },
+  AE: { lift: 0.070, bend: 0.038, spread:  0.040, sign: -1, phase: -0.20 },
+  SA: { lift: 0.064, bend: 0.032, spread:  0.032, sign: -1, phase: 0.05 },
+  PK: { lift: 0.076, bend: 0.046, spread:  0.048, sign:  1, phase: 0.40 },
+  QA: { lift: 0.060, bend: 0.028, spread:  0.028, sign: -1, phase: 0.18 },
+  OM: { lift: 0.066, bend: 0.031, spread:  0.034, sign: -1, phase: 0.10 },
+};
+function cross3(a,b,o){
+  o[0]=a[1]*b[2]-a[2]*b[1];
+  o[1]=a[2]*b[0]-a[0]*b[2];
+  o[2]=a[0]*b[1]-a[1]*b[0];
+  return o;
+}
+function norm3(v){
+  const m=Math.hypot(v[0],v[1],v[2])||1;
+  v[0]/=m; v[1]/=m; v[2]/=m;
+  return v;
+}
 LINKS.forEach(l=>{
   l.va=nodeV[NODES.indexOf(nodeById(l.a))];
   l.vb=nodeV[NODES.indexOf(nodeById(l.b))];
   l.ang=Math.acos(Math.max(-1,Math.min(1,l.va[0]*l.vb[0]+l.va[1]*l.vb[1]+l.va[2]*l.vb[2])));
-  /* arcs hug the surface fairly closely: the sphere is cropped at the top of
-     the hero, so tall arcs would sail out of frame */
-  l.lift=0.045+0.07*(l.ang/Math.PI);
+  l.side=[0,0,0];
+  cross3(l.va,l.vb,l.side);
+  norm3(l.side);
+  l.tan=[0,0,0];
+  cross3(l.side,l.va,l.tan);
+  norm3(l.tan);
+  const t=ARC_TUNING[l.b]||{lift:0.058,bend:0.028,spread:0,sign:1,phase:0};
+  l.lift=t.lift+0.022*(l.ang/Math.PI);
+  l.bend=t.bend;
+  l.spread=t.spread;
+  l.bendSign=t.sign;
+  l.phase=t.phase;
 });
+function arcAt(l,s,out){
+  slerp(l.va,l.vb,l.ang,s,tmp);
+  const h=Math.sin(Math.PI*s);
+  const h2=Math.sin(2*Math.PI*s);
+  const depart=Math.sin(Math.PI*Math.min(1,s/0.45))*(1-Math.min(1,s/0.88));
+  const lat=l.bendSign*(l.bend*h+l.spread*h2*0.48);
+  tmp[0]+=l.side[0]*lat+l.tan[0]*l.spread*depart*1.25;
+  tmp[1]+=l.side[1]*lat+l.tan[1]*l.spread*depart*1.25;
+  tmp[2]+=l.side[2]*lat+l.tan[2]*l.spread*depart*1.25;
+  const m=Math.hypot(tmp[0],tmp[1],tmp[2])||1;
+  const hLift=h*(0.7+0.3*Math.sin(Math.PI*s+l.phase))+0.1*h2*Math.cos(l.phase);
+  const rr=1+l.lift*Math.max(0.08,hLift);
+  out[0]=tmp[0]/m*rr; out[1]=tmp[1]/m*rr; out[2]=tmp[2]/m*rr;
+  return out;
+}
 function slerp(a,b,ang,t,out){
   if (ang<1e-6){ out[0]=a[0];out[1]=a[1];out[2]=a[2]; return out; }
   const s=Math.sin(ang), f1=Math.sin((1-t)*ang)/s, f2=Math.sin(t*ang)/s;
@@ -323,9 +369,7 @@ function draw(t){
     const N=96, pts=[];
     for (let i=0;i<=N;i++){
       const s=i/N;
-      slerp(l.va,l.vb,l.ang,s,tmp);
-      const rr=1+l.lift*Math.sin(Math.PI*s);
-      tmp[0]*=rr; tmp[1]*=rr; tmp[2]*=rr;
+      arcAt(l,s,tmp);
       proj(tmp,p4);
       const dx=p4[0]-cx, dy=p4[1]-cy;
       pts.push((p4[2]<0 && dx*dx+dy*dy<R*R) ? null : [p4[0],p4[1]]);
@@ -344,9 +388,7 @@ function draw(t){
     const speed=0.055+(li%3)*0.008;
     for (let k=0;k<l.packets;k++){
       const s=((t*speed+k/l.packets+li*0.13)%1);
-      slerp(l.va,l.vb,l.ang,s,tmp);
-      const rr=1+l.lift*Math.sin(Math.PI*s);
-      tmp[0]*=rr; tmp[1]*=rr; tmp[2]*=rr;
+      arcAt(l,s,tmp);
       proj(tmp,p4);
       if (p4[2]<0 && (p4[0]-cx)*(p4[0]-cx)+(p4[1]-cy)*(p4[1]-cy)<R*R) continue;
       const fade=Math.sin(Math.PI*s), rad=Math.max(1.6,R*(on?0.011:0.0082)), d=rad*(l.a==="USA"?5.2:6.0);
