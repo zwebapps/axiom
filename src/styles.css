@@ -162,6 +162,13 @@
 
   html {
     scroll-behavior: smooth;
+    /* The scroll-reveal variants start elements translated horizontally
+       (`slideLeft`/`slideRight` begin at x: ±72). On narrow viewports that
+       pushes them past the edge and widens the layout viewport, which makes
+       the whole page — including the fixed header and its menu — render wider
+       than the screen. `clip` on the root contains it without creating a
+       scroll container, so `position: sticky`/`fixed` still behave. */
+    overflow-x: clip;
   }
 
   body {
