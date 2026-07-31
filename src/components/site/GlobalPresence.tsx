@@ -22,39 +22,114 @@ const pins = [
   { x: 80, y: 68 },
 ];
 
+/** Seconds before the first pin starts falling, and between each one after. */
+const PIN_LEAD_IN = 0.35;
+const PIN_STAGGER = 0.32;
+/** Roughly how long a pin takes to settle — the glow waits this long to start. */
+const PIN_SETTLE = 1.1;
+
+function MapPinMarker({
+  pin,
+  index,
+  dropped,
+  glowing,
+}: {
+  pin: (typeof pins)[number];
+  index: number;
+  /** Latches true the first time the map is reached — drives the fall. */
+  dropped: boolean;
+  /** Tracks visibility both ways, so the halo idles while off screen. */
+  glowing: boolean;
+}) {
+  const dropDelay = PIN_LEAD_IN + index * PIN_STAGGER;
+  // Offset each halo so the pins breathe out of sync rather than in unison.
+  const glowDelay = dropDelay + PIN_SETTLE + index * 0.18;
+
+  return (
+    <motion.span
+      className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-gold"
+      style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+      initial={{ opacity: 0, scale: 0.2, y: -18 }}
+      animate={dropped ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.2, y: -18 }}
+      // Soft, low-stiffness spring so the pin visibly falls and settles instead
+      // of snapping into place.
+      transition={{
+        type: "spring",
+        stiffness: 110,
+        damping: 13,
+        mass: 1.1,
+        delay: dropped ? dropDelay : 0,
+      }}
+    >
+      {/* Expanding halo — the continuous glow. Animating scale/opacity keeps it
+          on the compositor; an animated box-shadow would repaint every frame. */}
+      <motion.span
+        aria-hidden
+        className="absolute h-2.5 w-2.5 rounded-full bg-gold"
+        initial={{ scale: 1, opacity: 0 }}
+        animate={glowing ? { scale: [1, 3.4], opacity: [0.55, 0] } : { scale: 1, opacity: 0 }}
+        transition={
+          glowing
+            ? {
+                duration: 2.8,
+                ease: "easeOut",
+                repeat: Infinity,
+                repeatDelay: 0.5,
+                delay: glowDelay,
+              }
+            : { duration: 0.3 }
+        }
+      />
+      {/* Static bloom so the pin still reads as lit between halo pulses. */}
+      <span
+        aria-hidden
+        className="absolute h-2 w-2 rounded-full bg-gold shadow-[0_0_10px_2px_oklch(0.79_0.115_82/60%)]"
+      />
+      <MapPin size={16} className="relative opacity-80" />
+    </motion.span>
+  );
+}
+
 function MapPins() {
   const reduceMotion = useReducedMotion();
   const ref = useRef(null);
-  const inView = useInView(ref, inViewOptions);
+  // `inViewOptions` latches (`once: true`) so the drop plays a single time.
+  const hasEntered = useInView(ref, inViewOptions);
+  // A second, non-latching observer parks the infinite halo while the section
+  // is off screen instead of animating forever in the background.
+  const onScreen = useInView(ref, { amount: 0.1 });
+
+  if (reduceMotion) {
+    return (
+      <div className="absolute inset-0">
+        {pins.map((p, i) => (
+          <span
+            key={i}
+            className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-gold"
+            style={{ left: `${p.x}%`, top: `${p.y}%` }}
+          >
+            <span aria-hidden className="absolute h-2 w-2 rounded-full bg-gold" />
+            <MapPin size={16} className="relative opacity-80" />
+          </span>
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div ref={ref} className="contents">
+    // Must be a real box, not `display: contents` — IntersectionObserver can't
+    // observe an element that generates no layout box, so `useInView` would
+    // never fire and the pins would stay invisible forever. `inset-0` matches
+    // the map exactly, so the pins' percentage offsets are unchanged.
+    <div ref={ref} className="absolute inset-0">
       {pins.map((p, i) => (
-        <motion.span
+        <MapPinMarker
           key={i}
-          className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-gold"
-          style={{ left: `${p.x}%`, top: `${p.y}%` }}
-          initial={reduceMotion ? false : { opacity: 0, scale: 0 }}
-          animate={reduceMotion || inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={
-            reduceMotion
-              ? undefined
-              : {
-                  type: "spring",
-                  stiffness: 480,
-                  damping: 22,
-                  delay: 0.15 + i * 0.08,
-                }
-          }
-        >
-          <span
-            className="pulse-gold absolute h-2 w-2 rounded-full bg-gold"
-            style={
-              reduceMotion ? undefined : { animation: `float-y ${5 + i}s ease-in-out infinite` }
-            }
-          />
-          <MapPin size={16} className="relative opacity-80" />
-        </motion.span>
+          pin={p}
+          index={i}
+          dropped={hasEntered}
+          glowing={hasEntered && onScreen}
+        />
       ))}
     </div>
   );
