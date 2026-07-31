@@ -40,7 +40,7 @@ export function WhoWeAre() {
           </Reveal>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-3">
           {shots.map((s, i) => (
             <Reveal key={s.alt} delay={i * 140} className={s.offset}>
               <div className="group relative overflow-hidden rounded-xs border border-border">

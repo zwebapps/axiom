@@ -100,18 +100,18 @@
     rgba(4,7,14,.38) 40%,rgba(4,7,14,.06) 58%,transparent 66%);
 }
 .axiom-hero .hero__copy{
-  z-index:3;align-self:center;grid-column:1;grid-row:1;
-  padding:clamp(20px,3.5vw,48px) clamp(20px,3vw,40px) clamp(24px,4vh,44px) var(--page-x,clamp(20px,3.2vw,48px));
-  max-width:880px;width:100%;
+  z-index:3;align-self:center;grid-column:1;grid-row:1;min-width:0;
+  padding:clamp(20px,3.5vw,48px) var(--page-x,clamp(20px,3.2vw,48px)) clamp(24px,4vh,44px);
+  max-width:880px;width:100%;box-sizing:border-box;
 }
 .axiom-hero .hero__copy .eyebrow{display:block;margin-bottom:26px;font-size:clamp(11px,.86vw,12.5px)}
-h1{
+.axiom-hero h1{
   font-family:var(--display);font-weight:400;
   font-size:clamp(40px,4.6vw,88px);line-height:1.08;letter-spacing:-.014em;
   margin:0 0 26px;color:#FBFAF6;
 }
-h1 span{display:block;white-space:nowrap;width:max-content;max-width:none}
-h1 .accent{
+.axiom-hero h1 span{display:block;white-space:nowrap;max-width:100%}
+.axiom-hero h1 .accent{
   color:transparent;background:linear-gradient(100deg,#F2D79C,#D2A657 45%,#B4863A);
   -webkit-background-clip:text;background-clip:text;
 }
@@ -277,7 +277,7 @@ h1 .accent{
   :root{--nav-h:70px}
   /* tablets keep the globe beside the copy — it never drops below the text */
   .hero{grid-template-columns:minmax(0,60%) minmax(0,40%)}
-  .hero__copy{padding:clamp(26px,4vw,48px) clamp(20px,2.4vw,32px) clamp(20px,3.4vh,36px) clamp(20px,3.2vw,40px)}
+  .hero__copy{padding:clamp(26px,4vw,48px) var(--page-x) clamp(20px,3.4vh,36px)}
   .hero__bottom{
     grid-template-columns:1fr;
     gap:14px;
@@ -300,12 +300,26 @@ h1 .accent{
 @media (max-width:767px),(max-height:480px){
   .globe,.hero__bottom .hint,.globe__tools,.hero__scrim{display:none}
   .hero{display:block;min-height:0;padding-bottom:8px}
-  .hero__copy{max-width:none;padding:clamp(26px,6vw,44px) 20px 22px}
-  h1{font-size:clamp(36px,6.2vw,70px)}
-  .corridors{width:auto;margin:0 auto 6px;max-width:calc(100% - 40px);border-radius:14px}
+  .hero__copy{
+    max-width:min(100%,var(--page-wide,1360px));
+    margin-inline:auto;
+    padding:clamp(26px,6vw,44px) var(--page-x,1.25rem) 22px;
+    padding-left:var(--page-x,1.25rem);
+  }
+  .axiom-hero h1{font-size:clamp(36px,9vw,52px);line-height:1.06}
+  .axiom-hero h1 span{white-space:normal;width:auto;max-width:100%}
+  .hero__bottom{
+    width:min(100%,var(--page-wide,1360px));
+    margin-inline:auto;
+    padding-left:var(--page-x,1.25rem);
+    padding-right:var(--page-x,1.25rem);
+  }
+  .corridors{width:100%;margin:0 auto 6px;max-width:none;border-radius:14px}
   .corridors__list{flex-wrap:wrap;overflow:visible;justify-content:center;gap:7px}
   .corr{background:rgba(255,255,255,.035);border-color:var(--line-2)}
   .corr__flag{display:none}
+  .axiom-hero .lede{max-width:none}
+  .axiom-hero .stat{justify-content:flex-start;padding-left:var(--page-x,1.25rem);padding-right:var(--page-x,1.25rem)}
 }
 
 @media (max-width:560px){

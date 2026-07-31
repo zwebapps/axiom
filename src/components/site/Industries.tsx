@@ -23,16 +23,18 @@ export function Industries() {
   return (
     <section id="industries" className="border-b border-border bg-navy-deep py-24">
       <PageWrap>
-        <Reveal>
-          <p className="eyebrow">{industriesContent.eyebrow}</p>
-        </Reveal>
-        <Reveal delay={100}>
-          <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] font-light">
-            {industriesContent.title}
-          </h2>
-        </Reveal>
+        <div className="mx-auto max-w-xl text-center lg:max-w-none lg:text-left">
+          <Reveal>
+            <p className="eyebrow">{industriesContent.eyebrow}</p>
+          </Reveal>
+          <Reveal delay={100}>
+            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] font-light">
+              {industriesContent.title}
+            </h2>
+          </Reveal>
+        </div>
 
-        <div className="relative mx-auto mt-16 aspect-square w-full max-w-[520px]">
+        <div className="relative mx-auto mt-16 aspect-square w-full max-w-[min(100%,520px)] min-[480px]:max-w-[520px]">
           <span className="absolute inset-[18%] rounded-full border border-border" />
           <span className="absolute inset-[6%] rounded-full border border-border/60" />
 
