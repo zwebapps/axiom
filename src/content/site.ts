@@ -183,6 +183,29 @@ export const insights = {
   ],
 } as const;
 
+export const contact = {
+  eyebrow: "Contact Us",
+  title: "Send us a message",
+  description:
+    "Share your requirement and we will contact you shortly. Your message opens in your email app and is addressed to info@axiomvertexgroup.com.",
+  email: "info@axiomvertexgroup.com",
+  footnote: "This opens your email app and sends to info@axiomvertexgroup.com.",
+  placeholders: {
+    name: "Your name",
+    email: "your@email.com",
+    message: "Write your message...",
+  },
+  submit: "Send Message",
+  successTitle: "Your email app should open",
+  successBody:
+    "If it did not open automatically, send your message directly to info@axiomvertexgroup.com.",
+  errors: {
+    name: "Please enter your name.",
+    email: "Please enter a valid email address.",
+    message: "Please enter a message.",
+  },
+} as const;
+
 export const footer = {
   pillars: [
     {

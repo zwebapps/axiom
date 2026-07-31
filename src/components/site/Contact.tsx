@@ -1,0 +1,270 @@
+"use client";
+
+import { useState, type FormEvent, type ReactNode } from "react";
+import { ArrowRight, CheckCircle2, Mail, MessageSquare, User } from "lucide-react";
+
+import { contact as contactContent } from "@/content/site";
+
+import { PageWrap } from "./PageWrap";
+import { Reveal } from "./Reveal";
+
+type FieldErrors = Partial<Record<"name" | "email" | "message", string>>;
+
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+function Field({
+  id,
+  label,
+  error,
+  children,
+}: {
+  id: string;
+  label: string;
+  error?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="group/field">
+      <label
+        htmlFor={id}
+        className="mb-2.5 block text-[11px] font-medium tracking-[0.16em] text-muted-foreground uppercase"
+      >
+        {label}
+      </label>
+      {children}
+      {error ? (
+        <p id={`${id}-error`} className="mt-2 text-xs text-gold" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+const fieldBase =
+  "w-full rounded-sm border bg-navy-deep/50 px-4 py-3.5 pl-11 text-[15px] text-foreground shadow-[inset_0_1px_0_oklch(1_0_0/4%)] outline-none backdrop-blur-sm transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-muted-foreground/55";
+
+function fieldClass(hasError: boolean) {
+  return hasError
+    ? `${fieldBase} border-gold/50 ring-2 ring-gold/15 focus:border-gold focus:ring-gold/25`
+    : `${fieldBase} border-border/70 hover:border-border focus:border-gold/45 focus:bg-navy-deep/70 focus:ring-2 focus:ring-gold/20`;
+}
+
+export function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitted, setSubmitted] = useState(false);
+
+  function validate() {
+    const next: FieldErrors = {};
+    if (!name.trim()) next.name = contactContent.errors.name;
+    if (!isValidEmail(email)) next.email = contactContent.errors.email;
+    if (!message.trim()) next.message = contactContent.errors.message;
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSubmitted(false);
+    if (!validate()) return;
+
+    const subject = encodeURIComponent(`Website inquiry from ${name.trim()}`);
+    const body = encodeURIComponent(
+      `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`,
+    );
+    window.location.href = `mailto:${contactContent.email}?subject=${subject}&body=${body}`;
+    setSubmitted(true);
+  }
+
+  return (
+    <section
+      id="contact"
+      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24"
+    >
+      <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
+        <div>
+          <Reveal>
+            <p className="eyebrow">{contactContent.eyebrow}</p>
+          </Reveal>
+          <Reveal delay={100}>
+            <h2 className="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light leading-[1.12]">
+              {contactContent.title}
+            </h2>
+          </Reveal>
+          <Reveal delay={180}>
+            <p className="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground">
+              {contactContent.description}
+            </p>
+          </Reveal>
+          <Reveal delay={260}>
+            <a
+              href={`mailto:${contactContent.email}`}
+              className="mt-10 inline-flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/35 text-gold">
+                <Mail size={16} strokeWidth={1.4} />
+              </span>
+              {contactContent.email}
+            </a>
+          </Reveal>
+        </div>
+
+        <Reveal delay={120}>
+          <div className="relative overflow-hidden rounded-xs border border-border/80 bg-linear-to-br from-navy via-navy-deep/95 to-navy shadow-[var(--shadow-panel)]">
+            <span
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/80 to-transparent"
+              aria-hidden
+            />
+            <div className="border-b border-border/50 px-6 py-4 sm:px-8 sm:py-5">
+              <p className="text-[11px] font-medium tracking-[0.22em] text-gold uppercase">
+                Inquiry form
+              </p>
+              <p className="mt-1 text-[13px] text-muted-foreground">
+                All fields are required. We typically respond within one business day.
+              </p>
+            </div>
+
+            <div className="p-6 sm:p-8">
+              {submitted ? (
+                <div
+                  className="relative overflow-hidden rounded-sm border border-gold/30 bg-gold/[0.07] px-6 py-8 text-center sm:px-8"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span
+                    className="pointer-events-none absolute inset-0 bg-linear-to-b from-gold/[0.08] to-transparent"
+                    aria-hidden
+                  />
+                  <CheckCircle2
+                    className="relative mx-auto text-gold"
+                    size={36}
+                    strokeWidth={1.25}
+                  />
+                  <p className="relative mt-4 font-display text-xl text-foreground">
+                    {contactContent.successTitle}
+                  </p>
+                  <p className="relative mx-auto mt-3 max-w-sm text-[13px] leading-relaxed text-muted-foreground">
+                    {contactContent.successBody}
+                  </p>
+                  <button
+                    type="button"
+                    className="relative mt-6 text-[13px] font-medium text-gold underline-offset-4 transition-colors hover:text-gold-soft hover:underline"
+                    onClick={() => setSubmitted(false)}
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <Field id="contact-name" label="Name" error={errors.name}>
+                      <div className="relative">
+                        <User
+                          className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
+                          size={17}
+                          strokeWidth={1.4}
+                          aria-hidden
+                        />
+                        <input
+                          id="contact-name"
+                          name="name"
+                          type="text"
+                          autoComplete="name"
+                          value={name}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                            if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                          }}
+                          placeholder={contactContent.placeholders.name}
+                          className={fieldClass(Boolean(errors.name))}
+                          aria-invalid={Boolean(errors.name)}
+                          aria-describedby={errors.name ? "contact-name-error" : undefined}
+                        />
+                      </div>
+                    </Field>
+
+                    <Field id="contact-email" label="Email" error={errors.email}>
+                      <div className="relative">
+                        <Mail
+                          className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
+                          size={17}
+                          strokeWidth={1.4}
+                          aria-hidden
+                        />
+                        <input
+                          id="contact-email"
+                          name="email"
+                          type="email"
+                          autoComplete="email"
+                          inputMode="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+                          }}
+                          placeholder={contactContent.placeholders.email}
+                          className={fieldClass(Boolean(errors.email))}
+                          aria-invalid={Boolean(errors.email)}
+                          aria-describedby={errors.email ? "contact-email-error" : undefined}
+                        />
+                      </div>
+                    </Field>
+                  </div>
+
+                  <Field id="contact-message" label="Message" error={errors.message}>
+                    <div className="relative">
+                      <MessageSquare
+                        className="pointer-events-none absolute top-3.5 left-3.5 text-muted-foreground/70"
+                        size={17}
+                        strokeWidth={1.4}
+                        aria-hidden
+                      />
+                      <textarea
+                        id="contact-message"
+                        name="message"
+                        rows={5}
+                        value={message}
+                        onChange={(e) => {
+                          setMessage(e.target.value);
+                          if (errors.message) setErrors((prev) => ({ ...prev, message: undefined }));
+                        }}
+                        placeholder={contactContent.placeholders.message}
+                        className={`${fieldClass(Boolean(errors.message))} min-h-[148px] resize-y pt-3.5`}
+                        aria-invalid={Boolean(errors.message)}
+                        aria-describedby={errors.message ? "contact-message-error" : undefined}
+                      />
+                    </div>
+                  </Field>
+
+                  <div className="border-t border-border/50 pt-6">
+                    <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="btn-gold group px-8"
+                    >
+                      {contactContent.submit}
+                      <ArrowRight
+                        size={15}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </button>
+                    </div>
+                    <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+                      <Mail size={14} className="mt-0.5 shrink-0 opacity-60" aria-hidden />
+                      {contactContent.footnote}
+                    </p>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </Reveal>
+      </PageWrap>
+    </section>
+  );
+}

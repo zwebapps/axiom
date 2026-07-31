@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { About } from "@/components/site/About";
+import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 import { GlobalPresence } from "@/components/site/GlobalPresence";
 import { Hero } from "@/components/site/Hero";
@@ -25,6 +26,7 @@ function HomePage() {
       <Services />
       <GlobalPresence />
       <Insights />
+      <Contact />
       <Footer />
     </>
   );

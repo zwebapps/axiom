@@ -8,7 +8,7 @@ const pillarIcons = [Globe2, Handshake, ShieldCheck, Sparkles];
 
 export function Footer() {
   return (
-    <footer id="contact" className="bg-navy">
+    <footer className="bg-navy">
       <div className="border-b border-border">
         <PageWrap className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {footerContent.pillars.map((p, i) => {
