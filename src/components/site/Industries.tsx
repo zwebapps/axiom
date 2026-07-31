@@ -1,6 +1,5 @@
 import { ArrowRight, Building2, Cpu, Factory, HeartPulse, Landmark, ShoppingBag, Zap } from "lucide-react";
-import { industries as industriesContent } from "@/content/site";
-import { LogoMark } from "./LogoMark";
+import { industries as industriesContent, brand, logos } from "@/content/site";
 import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 
@@ -39,8 +38,15 @@ export function Industries() {
           <span className="absolute inset-[6%] rounded-full border border-border/60" />
 
           <Reveal className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <span className="pulse-gold flex h-24 w-24 items-center justify-center rounded-full border border-gold/50 bg-navy">
-              <LogoMark animate={false} className="h-11 w-10" />
+            <span className="pulse-gold flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full border border-gold/50 bg-navy p-3 sm:h-28 sm:w-28 sm:p-3.5">
+              <img
+                src={logos.hub}
+                alt={`${brand.name} mark`}
+                width={120}
+                height={120}
+                className="h-full w-full object-contain"
+                decoding="async"
+              />
             </span>
           </Reveal>
 
