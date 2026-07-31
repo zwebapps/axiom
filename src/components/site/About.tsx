@@ -3,13 +3,18 @@
 import { ArrowRight, Check, Play } from "lucide-react";
 import boardroom from "@/assets/boardroom.jpg";
 import { about } from "@/content/site";
+import { CountUp } from "./CountUp";
+import { MotionLink } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
 
 export function About() {
   return (
-    <section id="about" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
+    <section
+      id="about"
+      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24"
+    >
       <PageWrap className="grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>
           <SectionIntro eyebrow={about.eyebrow} title={about.title} description={about.body} />
@@ -28,7 +33,10 @@ export function About() {
           <RevealStagger className="mt-12 grid grid-cols-3 gap-6" stagger={0.12}>
             {about.figures.map((f) => (
               <RevealItem key={f.label} variant="scale">
-                <div className="font-display text-3xl text-gold">{f.value}</div>
+                <CountUp
+                  value={f.value}
+                  className="block font-display text-3xl text-gold tabular-nums"
+                />
                 <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
               </RevealItem>
             ))}
@@ -68,13 +76,16 @@ export function About() {
 
       <PageWrap className="mt-16">
         <Reveal variant="fade">
-          <a href="#services" className="group inline-flex items-center gap-2 text-[13px] text-gold">
+          <MotionLink
+            href="#services"
+            className="group inline-flex items-center gap-2 text-[13px] text-gold"
+          >
             {about.link}
             <ArrowRight
               size={15}
               className="transition-transform duration-300 group-hover:translate-x-1.5"
             />
-          </a>
+          </MotionLink>
         </Reveal>
       </PageWrap>
     </section>

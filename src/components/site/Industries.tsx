@@ -1,7 +1,19 @@
 "use client";
 
-import { ArrowRight, Building2, Cpu, Factory, HeartPulse, Landmark, ShoppingBag, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Cpu,
+  Factory,
+  HeartPulse,
+  Landmark,
+  ShoppingBag,
+  Zap,
+} from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+
 import { industries as industriesContent, brand, logos } from "@/content/site";
+import { MotionLink } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
@@ -17,13 +29,26 @@ const industryIcons: Record<string, typeof HeartPulse> = {
 };
 
 export function Industries() {
+  const reduceMotion = useReducedMotion();
   const items = industriesContent.items.map((label) => ({
     label,
     icon: industryIcons[label] ?? Building2,
   }));
 
+  // Counter-rotating rings: slow enough to read as ambient, not spinning.
+  const ring = (duration: number, direction: 1 | -1) =>
+    reduceMotion
+      ? {}
+      : {
+          animate: { rotate: 360 * direction },
+          transition: { duration, ease: "linear" as const, repeat: Infinity },
+        };
+
   return (
-    <section id="industries" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:hidden">
+    <section
+      id="industries"
+      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:hidden"
+    >
       <PageWrap>
         <SectionIntro
           align="center"
@@ -33,8 +58,16 @@ export function Industries() {
         />
 
         <div className="relative mx-auto mt-10 aspect-square w-full max-w-[min(100%,340px)]">
-          <span className="absolute inset-[18%] rounded-full border border-border" />
-          <span className="absolute inset-[6%] rounded-full border border-border/60" />
+          <motion.span
+            aria-hidden
+            className="absolute inset-[18%] rounded-full border border-dashed border-border"
+            {...ring(58, 1)}
+          />
+          <motion.span
+            aria-hidden
+            className="absolute inset-[6%] rounded-full border border-border/60"
+            {...ring(84, -1)}
+          />
 
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <Reveal variant="pop">
@@ -66,14 +99,19 @@ export function Industries() {
                 }}
               >
                 <Reveal delay={120 + i * 70} variant="pop">
-                  <div className="group flex flex-col items-center gap-2">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 bg-navy text-gold transition-all duration-500 group-hover:scale-110 group-hover:bg-gold group-hover:text-navy-deep">
+                  <motion.div
+                    className="group flex flex-col items-center gap-2"
+                    whileHover={reduceMotion ? undefined : { scale: 1.12 }}
+                    whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                  >
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 bg-navy text-gold transition-colors duration-500 group-hover:bg-gold group-hover:text-navy-deep">
                       <ind.icon size={18} strokeWidth={1.4} />
                     </span>
                     <span className="max-w-[4.5rem] text-center text-[9px] leading-tight text-muted-foreground">
                       {ind.label}
                     </span>
-                  </div>
+                  </motion.div>
                 </Reveal>
               </div>
             );
@@ -81,13 +119,16 @@ export function Industries() {
         </div>
 
         <Reveal delay={120} className="mt-10 flex justify-center" variant="rise">
-          <a href="#contact" className="btn-outline group w-full max-w-xs justify-center sm:w-auto">
+          <MotionLink
+            href="#contact"
+            className="btn-outline group w-full max-w-xs justify-center sm:w-auto"
+          >
             {industriesContent.cta}
             <ArrowRight
               size={15}
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
-          </a>
+          </MotionLink>
         </Reveal>
       </PageWrap>
     </section>

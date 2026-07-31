@@ -2,9 +2,12 @@
 
 import { useState, type FormEvent, type ReactNode } from "react";
 import { ArrowRight, CheckCircle2, Mail, MessageSquare, User } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { contact as contactContent } from "@/content/site";
+import { easeLux, springSnappy } from "@/lib/motion-presets";
 
+import { MotionButton } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
 import { Reveal } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
@@ -26,6 +29,8 @@ function Field({
   error?: string;
   children: ReactNode;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <div className="group/field">
       <label
@@ -35,11 +40,22 @@ function Field({
         {label}
       </label>
       {children}
-      {error ? (
-        <p id={`${id}-error`} className="mt-2 text-xs text-gold" role="alert">
-          {error}
-        </p>
-      ) : null}
+      <AnimatePresence initial={false}>
+        {error ? (
+          <motion.p
+            key="error"
+            id={`${id}-error`}
+            className="mt-2 overflow-hidden text-xs text-gold"
+            role="alert"
+            initial={reduceMotion ? false : { opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0, y: -4 }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.26, ease: easeLux }}
+          >
+            {error}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
@@ -54,6 +70,7 @@ function fieldClass(hasError: boolean) {
 }
 
 export function Contact() {
+  const reduceMotion = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -125,137 +142,158 @@ export function Contact() {
             </div>
 
             <div className="p-6 sm:p-8">
-              {submitted ? (
-                <div
-                  className="relative overflow-hidden rounded-sm border border-gold/30 bg-gold/[0.07] px-6 py-8 text-center sm:px-8"
-                  role="status"
-                  aria-live="polite"
-                >
-                  <span
-                    className="pointer-events-none absolute inset-0 bg-linear-to-b from-gold/[0.08] to-transparent"
-                    aria-hidden
-                  />
-                  <CheckCircle2
-                    className="relative mx-auto text-gold"
-                    size={36}
-                    strokeWidth={1.25}
-                  />
-                  <p className="relative mt-4 font-display text-xl text-foreground">
-                    {contactContent.successTitle}
-                  </p>
-                  <p className="relative mx-auto mt-3 max-w-sm text-[13px] leading-relaxed text-muted-foreground">
-                    {contactContent.successBody}
-                  </p>
-                  <button
-                    type="button"
-                    className="relative mt-6 text-[13px] font-medium text-gold underline-offset-4 transition-colors hover:text-gold-soft hover:underline"
-                    onClick={() => setSubmitted(false)}
+              <AnimatePresence mode="wait" initial={false}>
+                {submitted ? (
+                  <motion.div
+                    key="success"
+                    className="relative overflow-hidden rounded-sm border border-gold/30 bg-gold/[0.07] px-6 py-8 text-center sm:px-8"
+                    role="status"
+                    aria-live="polite"
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: -8 }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 0.42, ease: easeLux }}
                   >
-                    Send another message
-                  </button>
-                </div>
-              ) : (
-                <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <Field id="contact-name" label="Name" error={errors.name}>
-                      <div className="relative">
-                        <User
-                          className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
-                          size={17}
-                          strokeWidth={1.4}
-                          aria-hidden
-                        />
-                        <input
-                          id="contact-name"
-                          name="name"
-                          type="text"
-                          autoComplete="name"
-                          value={name}
-                          onChange={(e) => {
-                            setName(e.target.value);
-                            if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
-                          }}
-                          placeholder={contactContent.placeholders.name}
-                          className={fieldClass(Boolean(errors.name))}
-                          aria-invalid={Boolean(errors.name)}
-                          aria-describedby={errors.name ? "contact-name-error" : undefined}
-                        />
-                      </div>
-                    </Field>
-
-                    <Field id="contact-email" label="Email" error={errors.email}>
-                      <div className="relative">
-                        <Mail
-                          className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
-                          size={17}
-                          strokeWidth={1.4}
-                          aria-hidden
-                        />
-                        <input
-                          id="contact-email"
-                          name="email"
-                          type="email"
-                          autoComplete="email"
-                          inputMode="email"
-                          value={email}
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                            if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
-                          }}
-                          placeholder={contactContent.placeholders.email}
-                          className={fieldClass(Boolean(errors.email))}
-                          aria-invalid={Boolean(errors.email)}
-                          aria-describedby={errors.email ? "contact-email-error" : undefined}
-                        />
-                      </div>
-                    </Field>
-                  </div>
-
-                  <Field id="contact-message" label="Message" error={errors.message}>
-                    <div className="relative">
-                      <MessageSquare
-                        className="pointer-events-none absolute top-3.5 left-3.5 text-muted-foreground/70"
-                        size={17}
-                        strokeWidth={1.4}
-                        aria-hidden
-                      />
-                      <textarea
-                        id="contact-message"
-                        name="message"
-                        rows={5}
-                        value={message}
-                        onChange={(e) => {
-                          setMessage(e.target.value);
-                          if (errors.message) setErrors((prev) => ({ ...prev, message: undefined }));
-                        }}
-                        placeholder={contactContent.placeholders.message}
-                        className={`${fieldClass(Boolean(errors.message))} min-h-[148px] resize-y pt-3.5`}
-                        aria-invalid={Boolean(errors.message)}
-                        aria-describedby={errors.message ? "contact-message-error" : undefined}
-                      />
-                    </div>
-                  </Field>
-
-                  <div className="border-t border-border/50 pt-6">
-                    <div className="flex sm:justify-end">
-                    <button
-                      type="submit"
-                      className="btn-gold group w-full justify-center px-8 sm:w-auto"
+                    <span
+                      className="pointer-events-none absolute inset-0 bg-linear-to-b from-gold/[0.08] to-transparent"
+                      aria-hidden
+                    />
+                    <motion.span
+                      className="relative block"
+                      initial={reduceMotion ? false : { scale: 0.4, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={reduceMotion ? { duration: 0 } : { ...springSnappy, delay: 0.12 }}
                     >
-                      {contactContent.submit}
-                      <ArrowRight
-                        size={15}
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      />
-                    </button>
-                    </div>
-                    <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-                      <Mail size={14} className="mt-0.5 shrink-0 opacity-60" aria-hidden />
-                      {contactContent.footnote}
+                      <CheckCircle2 className="mx-auto text-gold" size={36} strokeWidth={1.25} />
+                    </motion.span>
+                    <p className="relative mt-4 font-display text-xl text-foreground">
+                      {contactContent.successTitle}
                     </p>
-                  </div>
-                </form>
-              )}
+                    <p className="relative mx-auto mt-3 max-w-sm text-[13px] leading-relaxed text-muted-foreground">
+                      {contactContent.successBody}
+                    </p>
+                    <button
+                      type="button"
+                      className="relative mt-6 text-[13px] font-medium text-gold underline-offset-4 transition-colors hover:text-gold-soft hover:underline"
+                      onClick={() => setSubmitted(false)}
+                    >
+                      Send another message
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.form
+                    key="form"
+                    className="space-y-6"
+                    onSubmit={handleSubmit}
+                    noValidate
+                    initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 0.34, ease: easeLux }}
+                  >
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <Field id="contact-name" label="Name" error={errors.name}>
+                        <div className="relative">
+                          <User
+                            className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
+                            size={17}
+                            strokeWidth={1.4}
+                            aria-hidden
+                          />
+                          <input
+                            id="contact-name"
+                            name="name"
+                            type="text"
+                            autoComplete="name"
+                            value={name}
+                            onChange={(e) => {
+                              setName(e.target.value);
+                              if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                            }}
+                            placeholder={contactContent.placeholders.name}
+                            className={fieldClass(Boolean(errors.name))}
+                            aria-invalid={Boolean(errors.name)}
+                            aria-describedby={errors.name ? "contact-name-error" : undefined}
+                          />
+                        </div>
+                      </Field>
+
+                      <Field id="contact-email" label="Email" error={errors.email}>
+                        <div className="relative">
+                          <Mail
+                            className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
+                            size={17}
+                            strokeWidth={1.4}
+                            aria-hidden
+                          />
+                          <input
+                            id="contact-email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            inputMode="email"
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                              if (errors.email)
+                                setErrors((prev) => ({ ...prev, email: undefined }));
+                            }}
+                            placeholder={contactContent.placeholders.email}
+                            className={fieldClass(Boolean(errors.email))}
+                            aria-invalid={Boolean(errors.email)}
+                            aria-describedby={errors.email ? "contact-email-error" : undefined}
+                          />
+                        </div>
+                      </Field>
+                    </div>
+
+                    <Field id="contact-message" label="Message" error={errors.message}>
+                      <div className="relative">
+                        <MessageSquare
+                          className="pointer-events-none absolute top-3.5 left-3.5 text-muted-foreground/70"
+                          size={17}
+                          strokeWidth={1.4}
+                          aria-hidden
+                        />
+                        <textarea
+                          id="contact-message"
+                          name="message"
+                          rows={5}
+                          value={message}
+                          onChange={(e) => {
+                            setMessage(e.target.value);
+                            if (errors.message)
+                              setErrors((prev) => ({ ...prev, message: undefined }));
+                          }}
+                          placeholder={contactContent.placeholders.message}
+                          className={`${fieldClass(Boolean(errors.message))} min-h-[148px] resize-y pt-3.5`}
+                          aria-invalid={Boolean(errors.message)}
+                          aria-describedby={errors.message ? "contact-message-error" : undefined}
+                        />
+                      </div>
+                    </Field>
+
+                    <div className="border-t border-border/50 pt-6">
+                      <div className="flex sm:justify-end">
+                        <MotionButton
+                          type="submit"
+                          className="btn-gold group w-full justify-center px-8 sm:w-auto"
+                        >
+                          {contactContent.submit}
+                          <ArrowRight
+                            size={15}
+                            className="transition-transform duration-300 group-hover:translate-x-1"
+                          />
+                        </MotionButton>
+                      </div>
+                      <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+                        <Mail size={14} className="mt-0.5 shrink-0 opacity-60" aria-hidden />
+                        {contactContent.footnote}
+                      </p>
+                    </div>
+                  </motion.form>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </Reveal>

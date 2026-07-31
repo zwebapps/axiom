@@ -1,6 +1,7 @@
 "use client";
 
 import { RevealItem, RevealStagger } from "./Reveal";
+import { SplitText } from "./SplitText";
 
 type SectionIntroProps = {
   eyebrow: string;
@@ -10,6 +11,8 @@ type SectionIntroProps = {
   className?: string;
   align?: "left" | "center";
   descriptionClassName?: string;
+  /** Set false to reveal the heading as one block instead of word by word. */
+  splitTitle?: boolean;
 };
 
 export function SectionIntro({
@@ -20,19 +23,25 @@ export function SectionIntro({
   className = "",
   align = "left",
   descriptionClassName = "mt-6 max-w-xl text-[15px] leading-relaxed text-muted-foreground",
+  splitTitle = true,
 }: SectionIntroProps) {
   const alignClass = align === "center" ? "mx-auto max-w-xl text-center" : "";
-  const descClass =
-    align === "center" ? `${descriptionClassName} mx-auto` : descriptionClassName;
+  const descClass = align === "center" ? `${descriptionClassName} mx-auto` : descriptionClassName;
 
   return (
     <RevealStagger className={`${alignClass} ${className}`.trim()} stagger={0.16}>
       <RevealItem variant="blur">
         <p className="eyebrow">{eyebrow}</p>
       </RevealItem>
-      <RevealItem variant="rise">
-        <h2 className={titleClassName}>{title}</h2>
-      </RevealItem>
+      {splitTitle ? (
+        // SplitText renders its own newlines, so drop `whitespace-pre-line`
+        // to avoid doubling the line breaks.
+        <SplitText text={title} className={titleClassName.replace("whitespace-pre-line", "")} />
+      ) : (
+        <RevealItem variant="rise">
+          <h2 className={titleClassName}>{title}</h2>
+        </RevealItem>
+      )}
       {description ? (
         <RevealItem variant="slideRight">
           <p className={descClass}>{description}</p>

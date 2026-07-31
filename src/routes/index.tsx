@@ -8,6 +8,7 @@ import { Hero } from "@/components/site/Hero";
 import { Industries } from "@/components/site/Industries";
 import { Insights } from "@/components/site/Insights";
 import { Navbar } from "@/components/site/Navbar";
+import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { Services } from "@/components/site/Services";
 import { WhoWeAre } from "@/components/site/WhoWeAre";
 
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   return (
     <>
+      <ScrollProgress />
       <Navbar />
       <Hero />
       <Industries />

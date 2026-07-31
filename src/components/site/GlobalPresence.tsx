@@ -7,6 +7,7 @@ import { useRef } from "react";
 import { globalPresence as globalContent } from "@/content/site";
 import { inViewOptions } from "@/lib/motion-presets";
 
+import { CountUp } from "./CountUp";
 import { PageWrap } from "./PageWrap";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
@@ -48,7 +49,9 @@ function MapPins() {
         >
           <span
             className="pulse-gold absolute h-2 w-2 rounded-full bg-gold"
-            style={reduceMotion ? undefined : { animation: `float-y ${5 + i}s ease-in-out infinite` }}
+            style={
+              reduceMotion ? undefined : { animation: `float-y ${5 + i}s ease-in-out infinite` }
+            }
           />
           <MapPin size={16} className="relative opacity-80" />
         </motion.span>
@@ -59,7 +62,10 @@ function MapPins() {
 
 export function GlobalPresence() {
   return (
-    <section id="global" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24">
+    <section
+      id="global"
+      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24"
+    >
       <PageWrap>
         <SectionIntro eyebrow={globalContent.eyebrow} title={globalContent.title} />
 
@@ -112,14 +118,20 @@ export function GlobalPresence() {
           </Reveal>
         </div>
 
-        <RevealStagger className="mt-10 grid grid-cols-2 rounded-xs border border-border lg:grid-cols-4" stagger={0.1}>
+        <RevealStagger
+          className="mt-10 grid grid-cols-2 rounded-xs border border-border lg:grid-cols-4"
+          stagger={0.1}
+        >
           {globalContent.figures.map((f, i) => (
             <RevealItem
               key={f.label}
               className={`px-6 py-7 text-center ${i > 0 ? "lg:hairline-x" : ""}`}
               variant="scale"
             >
-              <div className="font-display text-3xl text-foreground">{f.value}</div>
+              <CountUp
+                value={f.value}
+                className="block font-display text-3xl text-foreground tabular-nums"
+              />
               <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
             </RevealItem>
           ))}

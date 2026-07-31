@@ -3,32 +3,38 @@
 import { ArrowRight } from "lucide-react";
 import { insights as insightsContent } from "@/content/site";
 import { PageWrap } from "./PageWrap";
-import { Reveal, RevealItem, RevealStagger } from "./Reveal";
+import { RevealItem, RevealStagger } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
+import { TiltCard } from "./TiltCard";
 
 export function Insights() {
   return (
-    <section id="insights" className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24">
+    <section
+      id="insights"
+      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24"
+    >
       <PageWrap>
         <SectionIntro eyebrow={insightsContent.eyebrow} title={insightsContent.title} />
 
         <RevealStagger className="mt-14 grid gap-5 md:grid-cols-3" stagger={0.12}>
           {insightsContent.posts.map((post) => (
-            <RevealItem key={post.title} variant="slideLeft">
-              <article className="panel group flex h-full flex-col rounded-xs p-7 transition-all duration-500 hover:-translate-y-1 hover:border-gold/45">
-                <p className="text-[11px] tracking-[0.18em] text-gold uppercase">{post.tag}</p>
-                <h3 className="mt-4 font-display text-xl text-foreground">{post.title}</h3>
-                <p className="mt-3 flex-1 text-[13px] leading-relaxed text-muted-foreground">
-                  {post.excerpt}
-                </p>
-                <span className="mt-6 inline-flex items-center gap-2 text-[13px] text-gold">
-                  Read insight
-                  <ArrowRight
-                    size={14}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                </span>
-              </article>
+            <RevealItem key={post.title} variant="slideLeft" className="h-full">
+              <TiltCard intensity={4}>
+                <article className="panel group flex h-full flex-col overflow-hidden rounded-xs p-7 transition-colors duration-500 hover:border-gold/45">
+                  <p className="text-[11px] tracking-[0.18em] text-gold uppercase">{post.tag}</p>
+                  <h3 className="mt-4 font-display text-xl text-foreground">{post.title}</h3>
+                  <p className="mt-3 flex-1 text-[13px] leading-relaxed text-muted-foreground">
+                    {post.excerpt}
+                  </p>
+                  <span className="mt-6 inline-flex items-center gap-2 text-[13px] text-gold">
+                    Read insight
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  </span>
+                </article>
+              </TiltCard>
             </RevealItem>
           ))}
         </RevealStagger>

@@ -12,14 +12,7 @@ export const inViewOptions = {
 
 export const viewportEnter = inViewOptions;
 
-export type RevealVariant =
-  | "rise"
-  | "slideLeft"
-  | "slideRight"
-  | "scale"
-  | "blur"
-  | "fade"
-  | "pop";
+export type RevealVariant = "rise" | "slideLeft" | "slideRight" | "scale" | "blur" | "fade" | "pop";
 
 const visibleTransition = (delayMs = 0): Transition => ({
   duration: 1.05,
@@ -102,3 +95,54 @@ export const staggerContainer: Variants = {
 };
 
 export const staggerItem: Variants = revealVariants.rise;
+
+/* ------------------------------------------------------------------ *
+ * Interaction springs — shared so every hover/tap across the site
+ * settles with the same weight.
+ * ------------------------------------------------------------------ */
+
+/** Crisp, low-overshoot: buttons, links, small controls. */
+export const springSnappy: Transition = {
+  type: "spring",
+  stiffness: 420,
+  damping: 28,
+  mass: 0.7,
+};
+
+/** Softer and heavier: cards, panels, anything with real surface area. */
+export const springSurface: Transition = {
+  type: "spring",
+  stiffness: 260,
+  damping: 26,
+  mass: 0.9,
+};
+
+/** Loose tracking for pointer-driven values (tilt, spotlight). */
+export const springPointer = {
+  stiffness: 150,
+  damping: 18,
+  mass: 0.4,
+} as const;
+
+/** Standard hover lift + tap compression for interactive surfaces. */
+export const hoverLift = {
+  whileHover: { y: -6, transition: springSurface },
+  whileTap: { y: -2, scale: 0.99, transition: springSnappy },
+} as const;
+
+/** Standard hover/tap for buttons and pill links. */
+export const hoverPress = {
+  whileHover: { scale: 1.035, transition: springSnappy },
+  whileTap: { scale: 0.97, transition: springSnappy },
+} as const;
+
+/** Word-by-word heading reveal, used with `SplitText`. */
+export const wordReveal: Variants = {
+  hidden: { opacity: 0, y: "0.55em", filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    y: "0em",
+    filter: "blur(0px)",
+    transition: { duration: 0.72, ease: easeLux },
+  },
+};

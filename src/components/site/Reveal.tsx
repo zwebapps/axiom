@@ -43,7 +43,9 @@ export function Reveal({
   variant?: RevealVariant;
 }) {
   const { ref, show, reduceMotion } = useScrollReveal();
-  const Tag = motionTags[as];
+  // All entries render the same prop shape; widening to the div component
+  // lets one `HTMLMotionProps<"div">` object serve every tag.
+  const Tag = motionTags[as] as typeof motion.div;
 
   if (reduceMotion) {
     const Plain = as;
