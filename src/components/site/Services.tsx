@@ -14,7 +14,7 @@ export function Services() {
   return (
     <section
       id="services"
-      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24"
+      className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep"
     >
       <PageWrap>
         <SectionIntro eyebrow={servicesContent.eyebrow} title={servicesContent.title} />

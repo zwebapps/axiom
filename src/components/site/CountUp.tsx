@@ -64,10 +64,8 @@ export function CountUp({
   }
 
   return (
-    <span ref={ref} className={className}>
-      {/* Screen readers get the settled figure, not every interpolated frame. */}
-      <span aria-hidden>{display}</span>
-      <span className="sr-only">{value}</span>
+    <span ref={ref} className={className} aria-label={value}>
+      {display}
     </span>
   );
 }

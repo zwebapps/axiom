@@ -133,6 +133,17 @@
   --site-nav-h: 4.75rem;
 }
 
+.site-section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+@media (min-width: 768px) {
+  .site-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
 @media (max-width: 767px) {
   :root {
     --page-x: clamp(1.125rem, 4.25vw, 1.5rem);

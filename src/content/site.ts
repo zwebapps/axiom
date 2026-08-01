@@ -35,13 +35,28 @@ export const navigation = [
   { label: "Contact", href: "#contact" },
 ] as const;
 
-/** Shown in hero “Active global corridors” (order matches globe hover indices). */
-export const heroCorridors = [
-  { from: "USA", to: "UK", dotColor: "#3B82F6" },
-  { from: "USA", to: "GERMANY", dotColor: "#EAB308" },
-  { from: "USA", to: "UAE", dotColor: "#22C55E" },
-  { from: "USA", to: "SAUDI ARABIA", dotColor: "#38BDF8" },
-  { from: "USA", to: "PAKISTAN", dotColor: "#F97316" },
+/** Hero “Active global corridors” — regional hubs (colored dots). */
+export const heroCorridorRegions = [
+  { label: "USA", dotColor: "#3B82F6" },
+  { label: "Europe", dotColor: "#EAB308" },
+  { label: "GCC Region", dotColor: "#22C55E" },
+  { label: "South Asia", dotColor: "#F97316" },
+  { label: "Africa", dotColor: "#A855F7" },
+] as const;
+
+/** Key regions with flag codes (ISO 3166-1 alpha-2). */
+export const keyRegions = [
+  { label: "America", flagCodes: ["us"] as const },
+  {
+    label: "GCC Region",
+    flagCodes: ["ae", "sa", "qa", "om"] as const,
+  },
+  { label: "South Asia", flagCodes: ["pk", "in"] as const },
+  { label: "Africa", flagCodes: ["za", "ng", "eg"] as const },
+  {
+    label: "Europe",
+    flagCodes: ["eu", "de", "fr", "es", "pt"] as const,
+  },
 ] as const;
 
 export const heroClientLogos = [
@@ -74,7 +89,6 @@ export const whoWeAre = {
   eyebrow: "Who We Are",
   title: "Trusted Advisors.\nGlobal Impact.",
   body: "Axiom Vertex Group is a global advisory and trade facilitation firm helping organizations and governments navigate complex markets, enter new territories and achieve sustained competitive advantage.",
-  cta: "Watch Our Story",
 } as const;
 
 export const about = {
@@ -134,7 +148,7 @@ export const globalPresence = {
   eyebrow: "Global Presence",
   title: "Operating in 40+ Markets\nWorldwide",
   regionsTitle: "Our Key Regions",
-  regions: ["North America", "GCC Region", "South Asia", "Africa", "Europe"],
+  regions: keyRegions.map((r) => r.label),
   figures: [
     { value: "40+", label: "Markets" },
     { value: "5", label: "Regions" },
@@ -189,6 +203,8 @@ export const contact = {
   description:
     "Share your requirement and we will contact you shortly. Your message opens in your email app and is addressed to info@axiomvertexgroup.com.",
   email: "info@axiomvertexgroup.com",
+  phone: "+1 (646) 555-0142",
+  phoneTel: "+16465550142",
   footnote: "This opens your email app and sends to info@axiomvertexgroup.com.",
   placeholders: {
     name: "Your name",
@@ -235,7 +251,7 @@ export const footer = {
     },
     {
       title: "Regions",
-      links: ["North America", "GCC Region", "South Asia", "Europe"],
+      links: ["America", "GCC Region", "South Asia", "Africa", "Europe"],
     },
   ],
 } as const;

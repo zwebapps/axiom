@@ -147,7 +147,7 @@ export function Industries() {
   return (
     <section
       id="industries"
-      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:hidden"
+      className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep md:hidden"
     >
       <PageWrap>
         <SectionIntro

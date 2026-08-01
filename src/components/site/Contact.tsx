@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
-import { ArrowRight, CheckCircle2, Mail, MessageSquare, User } from "lucide-react";
+import { ArrowRight, CheckCircle2, Mail, MessageSquare, Phone, User } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { contact as contactContent } from "@/content/site";
@@ -100,10 +100,7 @@ export function Contact() {
   }
 
   return (
-    <section
-      id="contact"
-      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24"
-    >
+    <section id="contact" className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy">
       <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
         <div>
           <SectionIntro
@@ -114,15 +111,26 @@ export function Contact() {
             descriptionClassName="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground"
           />
           <Reveal delay={220} variant="scale">
-            <a
-              href={`mailto:${contactContent.email}`}
-              className="mt-10 inline-flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/35 text-gold">
-                <Mail size={16} strokeWidth={1.4} />
-              </span>
-              {contactContent.email}
-            </a>
+            <div className="mt-14 space-y-4 pt-1">
+              <a
+                href={`mailto:${contactContent.email}`}
+                className="inline-flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/35 text-gold">
+                  <Mail size={16} strokeWidth={1.4} />
+                </span>
+                {contactContent.email}
+              </a>
+              <a
+                href={`tel:${contactContent.phoneTel}`}
+                className="flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/35 text-gold">
+                  <Phone size={16} strokeWidth={1.4} />
+                </span>
+                {contactContent.phone}
+              </a>
+            </div>
           </Reveal>
         </div>
 

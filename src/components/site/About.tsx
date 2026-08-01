@@ -13,7 +13,7 @@ export function About() {
   return (
     <section
       id="about"
-      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy py-16 md:py-24"
+      className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy pt-20 md:pt-28"
     >
       <PageWrap className="grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>

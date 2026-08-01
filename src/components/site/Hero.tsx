@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
-import { heroClientLogos, heroCorridors } from "@/content/site";
+import { heroClientLogos, heroCorridorRegions } from "@/content/site";
 import { easeLux } from "@/lib/motion-presets";
 import { CountUp } from "./CountUp";
 import { HeroClientLogo } from "./HeroClientLogo";
@@ -121,6 +121,26 @@ function ArrowIcon() {
   );
 }
 
+function HeroStat({
+  icon,
+  value,
+  label,
+}: {
+  icon: ReactNode;
+  value: string;
+  label: string;
+}) {
+  return (
+    <RevealItem className="stat" variant="scale">
+      {icon}
+      <div>
+        <CountUp value={value} className="stat__num" />
+        <div className="stat__lbl">{label}</div>
+      </div>
+    </RevealItem>
+  );
+}
+
 export function Hero() {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -170,50 +190,18 @@ export function Hero() {
 
         <HeroCopy />
 
-        <div className="hero__bottom">
-          <div className="hint">
-            <svg className="hint__ring" viewBox="0 0 30 38" fill="none" aria-hidden="true">
-              <rect
-                x=".6"
-                y=".6"
-                width="28.8"
-                height="36.8"
-                rx="14.4"
-                stroke="rgba(210,166,87,.4)"
-              />
-              <path d="M15 9v7" stroke="var(--gold)" strokeWidth="1.3" />
-              <circle cx="15" cy="22" r="1.6" fill="var(--gold)" />
-              <path
-                d="M15 27.5l1.2 2.3 2.3 1.2-2.3 1.2-1.2 2.3-1.2-2.3-2.3-1.2 2.3-1.2z"
-                fill="rgba(210,166,87,.5)"
-              />
-            </svg>
-            <span className="hint__txt">
-              Drag to rotate
-              <br />
-              Scroll to explore
-            </span>
-          </div>
-
+        <div className="hero__bottom hero__bottom--corridors-only">
           <div className="corridors">
             <div className="corridors__title">Active global corridors</div>
             <div className="corridors__list" id="corrList">
-              {heroCorridors.map((route, i) => (
-                <motion.button
-                  key={`${route.from}-${route.to}`}
-                  className="corr"
-                  type="button"
-                  data-i={i}
-                  whileHover={{ y: -2, scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 26 }}
-                >
+              {heroCorridorRegions.map((region) => (
+                <span key={region.label} className="corr corr--region">
                   <span
                     className="corr__dot"
-                    style={{ background: route.dotColor, color: route.dotColor }}
+                    style={{ background: region.dotColor, color: region.dotColor }}
                   />
-                  {route.from} <span className="corr__swap">⇄</span> {route.to}
-                </motion.button>
+                  {region.label}
+                </span>
               ))}
             </div>
           </div>
@@ -228,8 +216,7 @@ export function Hero() {
             role="img"
           />
           <p className="sr">
-            Live corridors run from the United States to the United Kingdom, Germany, the United
-            Arab Emirates, Saudi Arabia, Qatar, Oman and Pakistan.
+            Live corridors connect the United States with Europe, the GCC, South Asia, and Africa.
           </p>
           <div
             className="globe__hit"
@@ -285,104 +272,114 @@ export function Hero() {
         </RevealStagger>
       </section>
 
-      <RevealStagger className="stats" aria-label="Key figures" stagger={0.12} as="section">
-        <RevealItem className="stat" variant="scale">
-          <svg
-            className="stat__ico"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="15" cy="12" r="7" stroke="currentColor" strokeWidth="1.2" />
-            <path
-              d="M15 8.4l1.1 2.3 2.5.4-1.8 1.8.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.8 2.5-.4z"
-              fill="currentColor"
-              opacity=".65"
-            />
-            <path d="M11 18.5 9 28l6-3 6 3-2-9.5" stroke="currentColor" strokeWidth="1.2" />
-          </svg>
-          <div>
-            <CountUp value="15+" className="stat__num" />
-            <div className="stat__lbl">Years of Excellence</div>
-          </div>
-        </RevealItem>
-        <RevealItem className="stat" variant="scale">
-          <svg
-            className="stat__ico"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="2.6"
-              y="4"
-              width="24.8"
-              height="22"
-              rx="3"
-              stroke="currentColor"
-              strokeWidth="1.2"
-            />
-            <path d="M7.5 20.5l4.5-5 3.6 3 6.4-8" stroke="currentColor" strokeWidth="1.4" />
-            <circle cx="22" cy="10.5" r="1.6" fill="currentColor" />
-          </svg>
-          <div>
-            <CountUp value="£2B+" className="stat__num" />
-            <div className="stat__lbl">Value Delivered</div>
-          </div>
-        </RevealItem>
-        <RevealItem className="stat" variant="scale">
-          <svg
-            className="stat__ico"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="15" cy="15" r="12" stroke="currentColor" strokeWidth="1.2" />
-            <ellipse cx="15" cy="15" rx="5" ry="12" stroke="currentColor" strokeWidth="1.2" />
-            <path d="M3.4 11h23.2M3.4 19h23.2" stroke="currentColor" strokeWidth="1.2" />
-          </svg>
-          <div>
-            <CountUp value="40+" className="stat__num" />
-            <div className="stat__lbl">Markets Served</div>
-          </div>
-        </RevealItem>
-        <RevealItem className="stat" variant="scale">
-          <svg
-            className="stat__ico"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="10.5" r="4.4" stroke="currentColor" strokeWidth="1.2" />
-            <circle
-              cx="21.5"
-              cy="12"
-              r="3.4"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              opacity=".7"
-            />
-            <path d="M3 25c0-4.4 3.6-7.4 8-7.4s8 3 8 7.4" stroke="currentColor" strokeWidth="1.2" />
-            <path
-              d="M20 18.2c4 .3 7 3.2 7 6.8"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              opacity=".7"
-            />
-          </svg>
-          <div>
-            <CountUp value="100+" className="stat__num" />
-            <div className="stat__lbl">Global Partners</div>
-          </div>
-        </RevealItem>
+      <RevealStagger
+        className="stats stats-has-top-flow group"
+        aria-label="Key figures"
+        stagger={0.12}
+        as="section"
+      >
+        <div className="stats__top-flow" aria-hidden>
+          <span className="stats__top-track" />
+          <span className="stats__top-shine" />
+          <span className="stats__top-dot" />
+        </div>
+        <HeroStat
+          value="15+"
+          label="Years of Excellence"
+          icon={
+            <svg
+              className="stat__ico"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              aria-hidden
+            >
+              <circle cx="15" cy="12" r="7" stroke="currentColor" strokeWidth="1.2" />
+              <path
+                d="M15 8.4l1.1 2.3 2.5.4-1.8 1.8.4 2.5-2.2-1.2-2.2 1.2.4-2.5-1.8-1.8 2.5-.4z"
+                fill="currentColor"
+                opacity=".65"
+              />
+              <path d="M11 18.5 9 28l6-3 6 3-2-9.5" stroke="currentColor" strokeWidth="1.2" />
+            </svg>
+          }
+        />
+        <HeroStat
+          value="$2B+"
+          label="Value Delivered"
+          icon={
+            <svg
+              className="stat__ico"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              aria-hidden
+            >
+              <rect
+                x="2.6"
+                y="4"
+                width="24.8"
+                height="22"
+                rx="3"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              />
+              <path d="M7.5 20.5l4.5-5 3.6 3 6.4-8" stroke="currentColor" strokeWidth="1.4" />
+              <circle cx="22" cy="10.5" r="1.6" fill="currentColor" />
+            </svg>
+          }
+        />
+        <HeroStat
+          value="40+"
+          label="Markets Served"
+          icon={
+            <svg
+              className="stat__ico"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              aria-hidden
+            >
+              <circle cx="15" cy="15" r="12" stroke="currentColor" strokeWidth="1.2" />
+              <ellipse cx="15" cy="15" rx="5" ry="12" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M3.4 11h23.2M3.4 19h23.2" stroke="currentColor" strokeWidth="1.2" />
+            </svg>
+          }
+        />
+        <HeroStat
+          value="100+"
+          label="Global Partners"
+          icon={
+            <svg
+              className="stat__ico"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              aria-hidden
+            >
+              <circle cx="11" cy="10.5" r="4.4" stroke="currentColor" strokeWidth="1.2" />
+              <circle
+                cx="21.5"
+                cy="12"
+                r="3.4"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                opacity=".7"
+              />
+              <path d="M3 25c0-4.4 3.6-7.4 8-7.4s8 3 8 7.4" stroke="currentColor" strokeWidth="1.2" />
+              <path
+                d="M20 18.2c4 .3 7 3.2 7 6.8"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                opacity=".7"
+              />
+            </svg>
+          }
+        />
       </RevealStagger>
     </div>
   );

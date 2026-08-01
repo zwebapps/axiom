@@ -124,7 +124,7 @@ export function Insights() {
   return (
     <section
       id="insights"
-      className="scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep py-16 md:py-24"
+      className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep"
     >
       <PageWrap>
         <SectionIntro eyebrow={insightsContent.eyebrow} title={insightsContent.title} />

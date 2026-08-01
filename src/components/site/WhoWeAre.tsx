@@ -1,6 +1,5 @@
 "use client";
 
-import { Play } from "lucide-react";
 import { motion, useInView, useReducedMotion, type Variants } from "motion/react";
 import { useRef } from "react";
 
@@ -144,7 +143,7 @@ export function WhoWeAre() {
   const gridClass = "grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3 md:gap-6";
 
   return (
-    <section className="border-b border-border bg-navy-deep py-16 md:py-28 lg:py-36">
+    <section className="site-section border-b border-border bg-navy-deep">
       <PageWrap className="grid gap-10 md:grid-cols-[0.88fr_1.12fr] md:items-center md:gap-14 lg:gap-20">
         <div className="md:pr-4">
           <RevealStagger className="max-w-xl" stagger={0.14} delayChildren={0.04}>
@@ -162,15 +161,6 @@ export function WhoWeAre() {
               </p>
             </RevealItem>
           </RevealStagger>
-
-          <Reveal delay={220} variant="slideRight">
-            <button type="button" className="group mt-12 flex items-center gap-5">
-              <span className="pulse-gold flex h-14 w-14 items-center justify-center rounded-full border border-gold/60 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-navy-deep">
-                <Play size={18} fill="currentColor" />
-              </span>
-              <span className="text-[15px] tracking-wide text-foreground">{whoWeAre.cta}</span>
-            </button>
-          </Reveal>
         </div>
 
         {/* One observer for the whole gallery, so the cards always reveal in

@@ -9,22 +9,22 @@ const D2R = Math.PI/180;
 
 const NODES = [
   {id:"USA", label:"USA",          lon:-74.0, lat:40.7},
-  {id:"UK",  label:"UK",           lon:-0.13, lat:51.5},
-  {id:"DE",  label:"GERMANY",      lon:8.68,  lat:50.11},
+  {id:"EU",  label:"EUROPE",       lon:10.45, lat:51.16},
   {id:"AE",  label:"UAE",          lon:55.27, lat:25.2},
   {id:"SA",  label:"SAUDI ARABIA", lon:46.72, lat:24.71},
   {id:"QA",  label:"QATAR",        lon:51.53, lat:25.29},
   {id:"OM",  label:"OMAN",         lon:58.4,  lat:23.59},
-  {id:"PK",  label:"PAKISTAN",     lon:67.0,  lat:24.86}
+  {id:"PK",  label:"PAKISTAN",     lon:67.0,  lat:24.86},
+  {id:"ZA",  label:"AFRICA",       lon:28.05, lat:-26.20}
 ];
 const GOLD = "#D2A657";
 const CORRIDOR_DOTS = ["#3B82F6", "#EAB308", "#22C55E", "#38BDF8", "#F97316"];
 const LINKS = [
-  {a:"USA", b:"UK", key:1, packets:3},
-  {a:"USA", b:"DE", key:1, packets:3},
+  {a:"USA", b:"EU", key:1, packets:3},
   {a:"USA", b:"AE", key:1, packets:4},
-  {a:"USA", b:"SA", key:1, packets:3},
   {a:"USA", b:"PK", key:1, packets:4},
+  {a:"USA", b:"ZA", key:1, packets:3},
+  {a:"USA", b:"SA", key:0, packets:3},
   {a:"USA", b:"QA", key:0, packets:2},
   {a:"USA", b:"OM", key:0, packets:2}
 ];
@@ -40,6 +40,12 @@ const FLAGS = {
    <path d="M0 0l34 23M34 0L0 23" stroke="#C4212F" stroke-width="2.2"/>
    <path d="M17 0v23M0 11.5h34" stroke="#F4F5F7" stroke-width="7.4"/>
    <path d="M17 0v23M0 11.5h34" stroke="#C4212F" stroke-width="4.2"/></svg>`,
+ EU:`<svg viewBox="0 0 34 23"><rect width="34" height="23" fill="#1B3F8B"/>
+   <g fill="#F4C542"><circle cx="17" cy="11.5" r="6.2" fill="none" stroke="#F4C542" stroke-width=".9"/>
+   <circle cx="17" cy="5.8" r=".75"/><circle cx="20.2" cy="6.7" r=".75"/><circle cx="22.8" cy="9.2" r=".75"/>
+   <circle cx="23.6" cy="12.2" r=".75"/><circle cx="22.8" cy="15.2" r=".75"/><circle cx="20.2" cy="17.6" r=".75"/>
+   <circle cx="17" cy="18.5" r=".75"/><circle cx="13.8" cy="17.6" r=".75"/><circle cx="11.2" cy="15.2" r=".75"/>
+   <circle cx="10.4" cy="12.2" r=".75"/><circle cx="11.2" cy="9.2" r=".75"/><circle cx="13.8" cy="6.7" r=".75"/></g></svg>`,
  DE:`<svg viewBox="0 0 34 23"><rect width="34" height="7.67" fill="#15181C"/><rect y="7.67" width="34" height="7.67" fill="#C4212F"/><rect y="15.33" width="34" height="7.67" fill="#E2B23A"/></svg>`,
  AE:`<svg viewBox="0 0 34 23"><rect width="34" height="7.67" fill="#1B8A4B"/><rect y="7.67" width="34" height="7.67" fill="#F4F5F7"/><rect y="15.33" width="34" height="7.67" fill="#15181C"/><rect width="8.5" height="23" fill="#C4212F"/></svg>`,
  SA:`<svg viewBox="0 0 34 23"><rect width="34" height="23" fill="#0E7A3C"/>
@@ -51,7 +57,12 @@ const FLAGS = {
    <g stroke="#F4F5F7" stroke-width=".9"><path d="M3.2 4.2l3.2 3.4M6.4 4.2L3.2 7.6M4.8 3.2v5.4"/></g></svg>`,
  PK:`<svg viewBox="0 0 34 23"><rect width="34" height="23" fill="#0E6B3C"/><rect width="8.5" height="23" fill="#F4F5F7"/>
    <path d="M23.6 5.4a6.2 6.2 0 100 12.2 7 7 0 110-12.2z" fill="#F4F5F7"/>
-   <path d="M25.6 7.1l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2z" fill="#F4F5F7"/></svg>`
+   <path d="M25.6 7.1l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2z" fill="#F4F5F7"/></svg>`,
+ ZA:`<svg viewBox="0 0 34 23"><rect width="34" height="23" fill="#0B5B2E"/>
+   <path d="M0 0h12L34 11.5 12 23H0z" fill="#15181C"/>
+   <path d="M0 0h10L32 11.5 10 23H0z" fill="#C4212F"/>
+   <path d="M0 0h8L30 11.5 8 23H0z" fill="#E2B23A"/>
+   <path d="M0 0h6L28 11.5 6 23H0z" fill="#1B3F8B"/></svg>`
 };
 
 ["SIEMENS","DP WORLD","STANDARD CHARTERED","ARAMCO","EMAAR","ERICSSON","UNILEVER","PEPSICO"]
@@ -62,7 +73,7 @@ const FLAGS = {
 const nodeById = id => NODES.find(n=>n.id===id);
 const corrList = q("corrList");
 const KEYED = LINKS.filter(l=>l.key);
-if (corrList && !corrList.children.length) {
+if (corrList && !corrList.children.length && !corrList.querySelector(".corr--region")) {
 KEYED.forEach((l,i)=>{
   const dot = CORRIDOR_DOTS[i % CORRIDOR_DOTS.length];
   const b=document.createElement("button");
@@ -98,11 +109,11 @@ const nodeV = NODES.map(n=>unit(n.lon,n.lat));
 /* Per destination — tuned to hero mock (Figma): UK low Atlantic hop, DE slightly
    higher, Gulf routes sweep with their own apex, Pakistan on a separate arc. */
 const ARC_TUNING = {
-  UK: { lift: 0.044, bend: 0.009, spread: -0.026, sign:  1, phase: 0.00 },
-  DE: { lift: 0.056, bend: 0.022, spread: -0.012, sign:  1, phase: 0.24 },
+  EU: { lift: 0.056, bend: 0.022, spread: -0.012, sign:  1, phase: 0.24 },
   AE: { lift: 0.070, bend: 0.038, spread:  0.040, sign: -1, phase: -0.20 },
   SA: { lift: 0.064, bend: 0.032, spread:  0.032, sign: -1, phase: 0.05 },
   PK: { lift: 0.076, bend: 0.046, spread:  0.048, sign:  1, phase: 0.40 },
+  ZA: { lift: 0.082, bend: 0.042, spread:  0.036, sign: -1, phase: 0.28 },
   QA: { lift: 0.060, bend: 0.028, spread:  0.028, sign: -1, phase: 0.18 },
   OM: { lift: 0.066, bend: 0.031, spread:  0.034, sign: -1, phase: 0.10 },
 };
