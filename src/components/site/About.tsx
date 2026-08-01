@@ -30,7 +30,7 @@ export function About() {
               </Reveal>
             ))}
           </ul>
-          <RevealStagger className="mt-12 grid grid-cols-3 gap-6" stagger={0.12}>
+          <RevealStagger className="mt-16 grid grid-cols-3 gap-6 md:mt-20" stagger={0.12}>
             {about.figures.map((f) => (
               <RevealItem key={f.label} variant="scale">
                 <CountUp
