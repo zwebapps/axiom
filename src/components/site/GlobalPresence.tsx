@@ -93,7 +93,6 @@ function MapPinMarker({
 function MapPins() {
   const reduceMotion = useReducedMotion();
   const ref = useRef(null);
-  // `inViewOptions` latches (`once: true`) so the drop plays a single time.
   const hasEntered = useInView(ref, inViewOptions);
   // A second, non-latching observer parks the infinite halo while the section
   // is off screen instead of animating forever in the background.

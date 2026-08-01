@@ -68,7 +68,7 @@ export function Navbar() {
   // over the same values.
   const chrome = scrolled
     ? "border-b border-border bg-navy-deep/92 py-3 backdrop-blur-xl"
-    : "border-b border-transparent bg-linear-to-b from-navy-deep/85 via-navy-deep/45 to-transparent py-3 md:py-4";
+    : "border-b-0 py-3 md:py-4";
 
   return (
     <motion.header
@@ -77,6 +77,19 @@ export function Navbar() {
       transition={reduceMotion ? { duration: 0 } : { duration: 0.7, ease: easeLux, delay: 0.1 }}
       className={`fixed inset-x-0 top-0 z-[60] transition-[background-color,border-color,padding,backdrop-filter] duration-500 ${chrome}`}
     >
+      {/* At rest the hero's globe runs full-bleed behind this bar, so the links
+          need a scrim to stay legible over the bright parts of the earth. It's a
+          child that overhangs the header rather than the header's own
+          background: a semi-transparent gradient ending exactly on the header's
+          compositing boundary leaves a visible hairline along that edge. Letting
+          it fade out well below the bar removes the seam entirely. */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-[280%] bg-linear-to-b from-navy-deep via-navy-deep/75 to-transparent transition-opacity duration-500 ${
+          scrolled ? "opacity-0" : "opacity-100"
+        }`}
+      />
+
       <div className="flex w-full items-center gap-3 px-[var(--page-x)] md:gap-4">
         <a
           href="#home"

@@ -3,9 +3,9 @@ import type { Transition, Variants } from "motion/react";
 export const easeLux = [0.22, 1, 0.36, 1] as const;
 export const easeSmooth = [0.16, 1, 0.3, 1] as const;
 
-/** Fire slightly before the block enters the viewport (positive bottom margin). */
+/** Re-triggers when the block leaves and re-enters the viewport. */
 export const inViewOptions = {
-  once: true,
+  once: false,
   amount: 0.08,
   margin: "0px 0px 18% 0px",
 } as const;

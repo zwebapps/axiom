@@ -1,4 +1,9 @@
-.axiom-hero{padding-top:var(--site-nav-h,4.75rem);background:var(--ink,#04070E);color:var(--text,#EAEFF7);font-family:var(--ui,"Inter",sans-serif);}
+/* No top padding here: that would push the hero's background and globe down
+   from the top of the page, and because the navbar fades to transparent at its
+   lower edge you'd see the globe's hard top edge as a line under the topbar.
+   The hero runs full-bleed to y=0 and insets its own content instead (see
+   `.hero` below). */
+.axiom-hero{background:var(--ink,#04070E);color:var(--text,#EAEFF7);font-family:var(--ui,"Inter",sans-serif);}
 /* Axiom Vertex hero — from axiom-vertex-hero.html */
 .axiom-hero{
   --ink:#04070E;
@@ -76,8 +81,13 @@
 
 /* ---------- hero ---------- */
 .axiom-hero .hero{
-  position:relative;min-height:clamp(640px,74vh,940px);
-  padding-top:var(--nav-h);
+  /* Nav clearance lives here, not on `.axiom-hero`, so the absolutely
+     positioned background/globe (inset:0 resolves against the padding box)
+     still reach y=0 and slide under the translucent navbar with no visible
+     seam. The nav height is added to min-height so the content area keeps the
+     same size it had when the wrapper carried the padding. */
+  position:relative;min-height:calc(clamp(640px,74vh,940px) + var(--site-nav-h,4.75rem));
+  padding-top:var(--site-nav-h,4.75rem);
   display:grid;grid-template-columns:minmax(0,52%) minmax(0,48%);grid-template-rows:1fr auto;
   isolation:isolate;overflow:hidden;
 }
@@ -323,7 +333,10 @@
   .axiom-hero .hero{
     position:relative;
     display:block;
-    min-height:clamp(22rem,62vh,30rem);
+    /* Same reasoning as the base rule: keep the nav clearance inside the hero
+       so the background still reaches y=0, and add it to min-height so the
+       usable area is unchanged. */
+    min-height:calc(clamp(22rem,62vh,30rem) + var(--site-nav-h,4.75rem));
     padding-bottom:0;
     overflow:hidden;
   }
