@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-import { brand, navigation } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { easeLux, springSnappy } from "@/lib/motion-presets";
 
@@ -32,6 +32,8 @@ function MenuIcon({ open }: { open: boolean }) {
 }
 
 export function Navbar() {
+  const { content } = useSiteContent();
+  const { brand, navigation } = content;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -129,7 +131,7 @@ export function Navbar() {
             })}
           </nav>
           <MotionLink href="#contact" className="btn-gold shrink-0 whitespace-nowrap">
-            {brand.ctaPrimary}
+            {brand.navCta}
           </MotionLink>
         </div>
 
@@ -138,7 +140,7 @@ export function Navbar() {
             href="#contact"
             className="btn-gold hidden min-[420px]:inline-flex min-[420px]:px-4 min-[420px]:py-3 min-[420px]:text-[0.75rem]"
           >
-            {brand.ctaPrimary}
+            {brand.navCta}
           </MotionLink>
           <motion.button
             type="button"
@@ -214,7 +216,7 @@ export function Navbar() {
                 }
                 className="btn-gold mt-4 justify-center max-[419px]:flex min-[420px]:hidden"
               >
-                {brand.ctaPrimary}
+                {brand.navCta}
               </motion.a>
             </motion.nav>
           </motion.div>

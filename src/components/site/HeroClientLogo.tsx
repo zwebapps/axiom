@@ -1,6 +1,6 @@
-import type { heroClientLogos } from "@/content/site";
+import type { heroClientLogos } from "@/content/modern-site";
 
-type ClientId = (typeof heroClientLogos)[number];
+type ClientId = (typeof heroClientLogos)[number] | string;
 
 type HeroClientLogoProps = {
   id: ClientId;
@@ -109,7 +109,47 @@ export function HeroClientLogo({ id, className = "" }: HeroClientLogoProps) {
           <span className="client__word">PEPSICO</span>
         </span>
       );
+    case "vertex-corp":
+      return (
+        <span className={root} aria-label="Vertex Corp">
+          <span className="client__word">VERTEX CORP</span>
+        </span>
+      );
+    case "amana-petroleum":
+      return (
+        <span className={root} aria-label="Amana Petroleum">
+          <span className="client__word">AMANA PETROLEUM</span>
+        </span>
+      );
+    case "indus-foundry":
+      return (
+        <span className={root} aria-label="Indus Foundry">
+          <span className="client__word">INDUS FOUNDRY</span>
+        </span>
+      );
+    case "meridian-capital":
+      return (
+        <span className={root} aria-label="Meridian Capital">
+          <span className="client__word">MERIDIAN CAPITAL</span>
+        </span>
+      );
+    case "arabian-trade":
+      return (
+        <span className={root} aria-label="Arabian Trade">
+          <span className="client__word">ARABIAN TRADE</span>
+        </span>
+      );
+    case "pacific-freight":
+      return (
+        <span className={root} aria-label="Pacific Freight">
+          <span className="client__word">PACIFIC FREIGHT</span>
+        </span>
+      );
     default:
-      return null;
+      return (
+        <span className={root} aria-label={id}>
+          <span className="client__word">{id.replace(/-/g, " ").toUpperCase()}</span>
+        </span>
+      );
   }
 }

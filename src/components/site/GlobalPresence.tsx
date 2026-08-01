@@ -4,7 +4,7 @@ import { ChevronRight, MapPin } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 
-import { globalPresence as globalContent, keyRegions } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { easeLux, inViewOptions } from "@/lib/motion-presets";
 
 import { CountUp } from "./CountUp";
@@ -345,6 +345,8 @@ function GlobalFigureCell({
 
 function GlobalPresenceFigures() {
   const reduceMotion = useReducedMotion();
+  const { content } = useSiteContent();
+  const globalContent = content.globalPresence;
 
   return (
     <section
@@ -373,13 +375,20 @@ function GlobalPresenceFigures() {
 }
 
 export function GlobalPresence() {
+  const { content } = useSiteContent();
+  const { globalIntro, globalPresence: globalContent, keyRegions } = content;
+
   return (
     <section
       id="global"
       className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy"
     >
       <PageWrap>
-        <SectionIntro eyebrow={globalContent.eyebrow} title={globalContent.title} />
+        <SectionIntro
+          eyebrow={globalIntro.eyebrow}
+          title={globalIntro.title}
+          description={globalIntro.description}
+        />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
           <Reveal variant="slideRight">

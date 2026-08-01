@@ -3,7 +3,8 @@
 import { Globe2, Handshake, ShieldCheck, Sparkles } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 
-import { brand, footer as footerContent } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
+import { footerLinkHref } from "@/lib/footer-links";
 import { springSnappy } from "@/lib/motion-presets";
 import { PageWrap } from "./PageWrap";
 import { Logo } from "./Logo";
@@ -11,8 +12,91 @@ import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 
 const pillarIcons = [Globe2, Handshake, ShieldCheck, Sparkles];
 
+function FooterColumnLinks({
+  title,
+  links,
+  regionsInlineAfricaEurope,
+}: {
+  title: string;
+  links: readonly string[];
+  regionsInlineAfricaEurope?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  if (title === "Regions" && regionsInlineAfricaEurope) {
+    const rest = links.filter((l) => l !== "Africa" && l !== "Europe");
+    const hasAfricaEurope = links.includes("Africa") && links.includes("Europe");
+
+    return (
+      <ul className="mt-5 space-y-3">
+        {rest.map((l) => {
+          const href = footerLinkHref(title, l);
+          if (!href) {
+            return (
+              <li key={l}>
+                <span className="text-[13px] text-muted-foreground">{l}</span>
+              </li>
+            );
+          }
+          return (
+            <li key={l}>
+              <motion.a
+                href={href}
+                className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
+                whileHover={reduceMotion ? undefined : { x: 5 }}
+                transition={springSnappy}
+              >
+                {l}
+              </motion.a>
+            </li>
+          );
+        })}
+        {hasAfricaEurope ? (
+          <li>
+            <span className="text-[13px] text-muted-foreground">Africa · Europe</span>
+          </li>
+        ) : null}
+      </ul>
+    );
+  }
+
+  return (
+    <ul className="mt-5 space-y-3">
+      {links.map((l) => {
+        const href = footerLinkHref(title, l);
+        if (!href) {
+          return (
+            <li key={l}>
+              <span className="text-[13px] text-muted-foreground">{l}</span>
+            </li>
+          );
+        }
+        return (
+          <li key={l}>
+            <motion.a
+              href={href}
+              className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
+              whileHover={reduceMotion ? undefined : { x: 5 }}
+              transition={springSnappy}
+            >
+              {l}
+            </motion.a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function Footer() {
   const reduceMotion = useReducedMotion();
+  const { content } = useSiteContent();
+  const { brand, footer: footerContent } = content;
+  const linkCols = footerContent.gridColumns;
+  const mainGridClass =
+    linkCols === 4
+      ? "grid gap-12 pt-12 pb-6 md:pt-14 md:pb-8 lg:grid-cols-[1.35fr_repeat(4,1fr)] lg:gap-8 lg:pt-16 lg:pb-8"
+      : "grid gap-12 pt-12 pb-6 md:pt-14 md:pb-8 lg:grid-cols-[1.35fr_repeat(3,1fr)] lg:gap-8 lg:pt-16 lg:pb-8";
 
   return (
     <footer className="bg-navy">
@@ -45,7 +129,7 @@ export function Footer() {
         </PageWrap>
       </div>
 
-      <PageWrap className="grid gap-12 pt-12 pb-6 md:pt-14 md:pb-8 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:gap-10 lg:pt-16 lg:pb-8">
+      <PageWrap className={mainGridClass}>
         <Reveal variant="slideRight" className="-mt-4 flex flex-col md:-mt-6 lg:-mt-10">
           <a
             href="#home"
@@ -61,49 +145,11 @@ export function Footer() {
         {footerContent.columns.map((c, i) => (
           <Reveal key={c.title} delay={100 + i * 90} variant="fade">
             <h4 className="eyebrow">{c.title}</h4>
-            <ul className="mt-5 space-y-3">
-              {c.links.map((l) => {
-                if (c.title === "Regions" && l === "Africa") {
-                  return (
-                    <li key="africa-europe" className="flex flex-wrap items-center gap-x-3">
-                      <motion.a
-                        href="#global"
-                        className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
-                        whileHover={reduceMotion ? undefined : { x: 5 }}
-                        transition={springSnappy}
-                      >
-                        Africa
-                      </motion.a>
-                      <span className="text-[13px] text-border" aria-hidden>
-                        ·
-                      </span>
-                      <motion.a
-                        href="#global"
-                        className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
-                        whileHover={reduceMotion ? undefined : { x: 5 }}
-                        transition={springSnappy}
-                      >
-                        Europe
-                      </motion.a>
-                    </li>
-                  );
-                }
-                if (c.title === "Regions" && l === "Europe") return null;
-
-                return (
-                  <li key={l}>
-                    <motion.a
-                      href={c.title === "Regions" ? "#global" : "#home"}
-                      className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
-                      whileHover={reduceMotion ? undefined : { x: 5 }}
-                      transition={springSnappy}
-                    >
-                      {l}
-                    </motion.a>
-                  </li>
-                );
-              })}
-            </ul>
+            <FooterColumnLinks
+              title={c.title}
+              links={c.links}
+              regionsInlineAfricaEurope={footerContent.regionsInlineAfricaEurope}
+            />
           </Reveal>
         ))}
       </PageWrap>

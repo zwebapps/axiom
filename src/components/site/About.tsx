@@ -2,7 +2,7 @@
 
 import { ArrowRight, Check, Play } from "lucide-react";
 import boardroom from "@/assets/boardroom.jpg";
-import { about } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { CountUp } from "./CountUp";
 import { MotionLink } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
@@ -10,6 +10,9 @@ import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
 
 export function About() {
+  const { content } = useSiteContent();
+  const about = content.about;
+
   return (
     <section
       id="about"

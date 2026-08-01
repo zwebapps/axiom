@@ -4,14 +4,15 @@ import { ArrowRight } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 
-import { insights as insightsContent } from "@/content/site";
+import type { SiteContent } from "@/content/site-content.types";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { easeLux, inViewOptions } from "@/lib/motion-presets";
 
 import { PageWrap } from "./PageWrap";
 import { SectionIntro } from "./SectionIntro";
 import { TiltCard } from "./TiltCard";
 
-type Post = (typeof insightsContent.posts)[number];
+type Post = SiteContent["insights"]["posts"][number];
 
 /** Seconds before the first card moves, and between each card after it. */
 const LEAD_IN = 0.1;
@@ -117,6 +118,8 @@ function InsightCard({
 }
 
 export function Insights() {
+  const { content } = useSiteContent();
+  const insightsContent = content.insights;
   const gridRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const inView = useInView(gridRef, inViewOptions);
@@ -127,7 +130,11 @@ export function Insights() {
       className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep"
     >
       <PageWrap>
-        <SectionIntro eyebrow={insightsContent.eyebrow} title={insightsContent.title} />
+        <SectionIntro
+          eyebrow={insightsContent.eyebrow}
+          title={insightsContent.title}
+          description={insightsContent.subtitle}
+        />
 
         {/* One observer for the row, so the cards always arrive left to right
             instead of racing their own thresholds. */}

@@ -16,9 +16,14 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
+import { SiteContentProvider } from "@/context/SiteContentProvider";
+import { ContentVersionToggle } from "@/components/site/ContentVersionToggle";
+import { SiteSeo } from "@/components/site/SiteSeo";
+
 function HomePage() {
   return (
-    <>
+    <SiteContentProvider>
+      <SiteSeo />
       <ScrollProgress />
       <Navbar />
       <Hero />
@@ -30,6 +35,7 @@ function HomePage() {
       <Insights />
       <Contact />
       <Footer />
-    </>
+      <ContentVersionToggle />
+    </SiteContentProvider>
   );
 }

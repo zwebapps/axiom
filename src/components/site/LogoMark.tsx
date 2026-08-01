@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
-import { logos } from "@/content/site";
+import { logos } from "@/content/logos";
 
 type LogoMarkProps = {
   className?: string;

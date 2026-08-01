@@ -1,5 +1,6 @@
 "use client";
 
+import type { RevealVariant } from "@/lib/motion-presets";
 import { RevealItem, RevealStagger } from "./Reveal";
 import { SplitText } from "./SplitText";
 
@@ -11,6 +12,7 @@ type SectionIntroProps = {
   className?: string;
   align?: "left" | "center";
   descriptionClassName?: string;
+  descriptionVariant?: RevealVariant;
   /** Set false to reveal the heading as one block instead of word by word. */
   splitTitle?: boolean;
 };
@@ -23,6 +25,7 @@ export function SectionIntro({
   className = "",
   align = "left",
   descriptionClassName = "mt-6 max-w-xl text-[15px] leading-relaxed text-muted-foreground",
+  descriptionVariant = "slideRight",
   splitTitle = true,
 }: SectionIntroProps) {
   const alignClass = align === "center" ? "mx-auto max-w-xl text-center" : "";
@@ -43,7 +46,7 @@ export function SectionIntro({
         </RevealItem>
       )}
       {description ? (
-        <RevealItem variant="slideRight">
+        <RevealItem variant={descriptionVariant}>
           <p className={descClass}>{description}</p>
         </RevealItem>
       ) : null}

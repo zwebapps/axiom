@@ -125,6 +125,17 @@
   color:transparent;background:linear-gradient(100deg,#F2D79C,#D2A657 45%,#B4863A);
   -webkit-background-clip:text;background-clip:text;
 }
+.axiom-hero .hero__line--serif{font-style:italic;font-weight:400}
+.axiom-hero .hero__line--caps{
+  font-family:var(--sans);font-size:clamp(28px,3.2vw,56px);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;margin-top:.12em;
+}
+.axiom-hero .eyebrow--badge{
+  display:inline-block;width:fit-content;max-width:100%;
+  padding:.45rem .75rem;border:1px solid oklch(0.62 0.1 230 / 45%);
+  background:oklch(0.22 0.04 258 / 55%);color:var(--accent-sky, oklch(0.78 0.11 230));
+  letter-spacing:.14em;
+}
 .axiom-hero .lede{
   font-size:clamp(15px,1.18vw,17.5px);line-height:1.75;color:#A9B6C9;
   max-width:56ch;margin:0 0 38px;
@@ -304,6 +315,7 @@
   position:relative;
   overflow:visible;
 }
+.axiom-hero .stats.stats--three{grid-template-columns:repeat(3,1fr)}
 .axiom-hero .stats__top-flow{
   position:absolute;left:0;right:0;top:0;
   height:0;

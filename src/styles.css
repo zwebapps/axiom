@@ -31,6 +31,7 @@
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-gold-deep: var(--gold-deep);
+  --color-accent-sky: var(--accent-sky);
   --color-navy: var(--navy);
   --color-navy-deep: var(--navy-deep);
   --color-surface: var(--surface);
@@ -84,6 +85,10 @@
   --gold: oklch(0.77 0.095 82);
   --gold-soft: oklch(0.86 0.07 84);
   --gold-deep: oklch(0.64 0.105 74);
+
+  /* Mockup accent — sky blue for tags / corridor highlights */
+  --accent-sky: oklch(0.72 0.12 230);
+  --accent-sky-soft: oklch(0.78 0.1 230);
 
   --background: var(--navy-deep);
   --foreground: oklch(0.985 0.004 250);
@@ -141,6 +146,86 @@
   .site-section {
     padding-top: 4rem;
     padding-bottom: 4rem;
+  }
+}
+
+/* Contact — tighter intro stack (all content themes share this block) */
+#contact .contact-intro h2 {
+  margin: 0;
+}
+#contact .contact-intro h2 span.block + span.block {
+  margin-top: 0.06em;
+}
+
+#contact .contact-intro .contact-intro__description {
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  #contact .contact-intro .contact-intro__description {
+    margin-top: 1.5rem;
+  }
+}
+
+#contact .contact-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+#contact .contact-copy-col,
+#contact .contact-form-col {
+  min-width: 0;
+  width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+#contact .contact-copy-col {
+  flex: none;
+  overflow: hidden;
+}
+
+#contact .contact-form-col {
+  flex: none;
+}
+
+#contact .contact-form-panel {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  #contact .contact-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+
+  #contact .contact-copy-col {
+    flex: 0 0 44%;
+    max-width: 44%;
+    width: 44%;
+  }
+
+  #contact .contact-form-col {
+    flex: 1 1 56%;
+    min-width: 0;
+    width: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  #contact .contact-layout {
+    gap: 3.5rem;
+  }
+
+  #contact .contact-copy-col {
+    flex-basis: 42%;
+    max-width: 42%;
+    width: 42%;
   }
 }
 
@@ -207,6 +292,15 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold);
+  font-weight: 600;
+}
+
+@utility eyebrow-sky {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-sky);
   font-weight: 600;
 }
 

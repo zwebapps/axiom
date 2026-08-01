@@ -4,12 +4,11 @@ import { useState, type FormEvent, type ReactNode } from "react";
 import { ArrowRight, CheckCircle2, Globe, Mail, MessageSquare, Phone, User } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-import { contact as contactContent } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { easeLux, springSnappy } from "@/lib/motion-presets";
 
 import { MotionButton } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
-import { Reveal } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
 
 type FieldErrors = Partial<Record<"name" | "email" | "message", string>>;
@@ -118,6 +117,8 @@ function ContactChannel({
 }
 
 export function Contact() {
+  const { content } = useSiteContent();
+  const contactContent = content.contact;
   const reduceMotion = useReducedMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -150,34 +151,34 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="site-section scroll-mt-[var(--site-nav-h)] bg-navy pb-16 md:pb-24"
+      className="scroll-mt-[var(--site-nav-h)] bg-navy pt-14 pb-16 md:pt-20 md:pb-24"
     >
-      <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
-        <div className="flex flex-col gap-16 md:gap-20">
+      <PageWrap className="contact-layout">
+        <div className="contact-copy-col">
           <SectionIntro
             eyebrow={contactContent.eyebrow}
             title={contactContent.title}
             description={contactContent.description}
-            titleClassName="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light uppercase leading-[1.12] tracking-[0.04em]"
-            descriptionClassName="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground"
+            descriptionVariant="fade"
+            className="contact-intro"
+            titleClassName="mt-3 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light uppercase leading-[1.1] tracking-[0.04em]"
+            descriptionClassName="contact-intro__description mt-5 max-w-md text-[15px] leading-[1.65] text-muted-foreground md:mt-6"
           />
-          <Reveal delay={220} variant="rise">
-            <div className="flex flex-col gap-7">
-              {contactContent.channels.map((channel) => (
-                <ContactChannel
-                  key={channel.label}
-                  icon={channel.icon}
-                  label={channel.label}
-                  value={channel.value}
-                  href={"href" in channel ? channel.href : undefined}
-                />
-              ))}
-            </div>
-          </Reveal>
+          <div className="contact-channels mt-5 flex flex-col gap-5 sm:gap-6">
+            {contactContent.channels.map((channel) => (
+              <ContactChannel
+                key={channel.label}
+                icon={channel.icon}
+                label={channel.label}
+                value={channel.value}
+                href={"href" in channel ? channel.href : undefined}
+              />
+            ))}
+          </div>
         </div>
 
-        <Reveal delay={100} variant="slideLeft">
-          <div className="relative overflow-hidden rounded-xs border border-border/80 bg-linear-to-br from-navy via-navy-deep/95 to-navy shadow-[var(--shadow-panel)]">
+        <div className="contact-form-col">
+          <div className="contact-form-panel relative w-full overflow-hidden rounded-xs border border-border/80 bg-linear-to-br from-navy via-navy-deep/95 to-navy shadow-[var(--shadow-panel)]">
             <span
               className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/80 to-transparent"
               aria-hidden
@@ -229,16 +230,7 @@ export function Contact() {
                     </button>
                   </motion.div>
                 ) : (
-                  <motion.form
-                    key="form"
-                    className="space-y-6"
-                    onSubmit={handleSubmit}
-                    noValidate
-                    initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
-                    transition={reduceMotion ? { duration: 0 } : { duration: 0.34, ease: easeLux }}
-                  >
+                  <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                     <div className="grid gap-6">
                       <Field id="contact-name" label={contactContent.labels.name} error={errors.name}>
                         <div className="relative">
@@ -339,12 +331,12 @@ export function Contact() {
                         </MotionButton>
                       </div>
                     </div>
-                  </motion.form>
+                  </form>
                 )}
               </AnimatePresence>
             </div>
           </div>
-        </Reveal>
+        </div>
       </PageWrap>
     </section>
   );

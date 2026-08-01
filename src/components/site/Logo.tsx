@@ -2,7 +2,8 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
-import { brand, logos } from "@/content/site";
+import { logos } from "@/content/logos";
+import { useSiteContent } from "@/context/SiteContentProvider";
 
 const easeLux = [0.22, 1, 0.36, 1] as const;
 
@@ -27,6 +28,8 @@ export function Logo({
   lockup = false,
   footer = false,
 }: LogoProps) {
+  const { content } = useSiteContent();
+  const brand = content.brand;
   const reduceMotion = useReducedMotion();
   const shouldAnimate = animate && !reduceMotion;
 

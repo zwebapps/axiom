@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from "react";
 import city from "@/assets/city.jpg";
 import ship from "@/assets/ship.jpg";
 import handshake from "@/assets/handshake.jpg";
-import { whoWeAre } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { easeLux, inViewOptions } from "@/lib/motion-presets";
 
 import { PageWrap } from "./PageWrap";
@@ -141,6 +141,8 @@ function GalleryCard({
 }
 
 export function WhoWeAre() {
+  const { content } = useSiteContent();
+  const whoWeAre = content.whoWeAre;
   const galleryRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const inView = useInView(galleryRef, inViewOptions);
@@ -175,6 +177,9 @@ export function WhoWeAre() {
             <RevealItem variant="slideRight">
               <p className="mt-6 max-w-xl text-[clamp(15px,1.05vw,17px)] leading-[1.8] text-muted-foreground">
                 {whoWeAre.body}
+              </p>
+              <p className="mt-5 max-w-xl text-[clamp(15px,1.05vw,17px)] leading-[1.8] text-muted-foreground">
+                {whoWeAre.bodySecondary}
               </p>
             </RevealItem>
           </RevealStagger>

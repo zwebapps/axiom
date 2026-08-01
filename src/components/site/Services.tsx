@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Briefcase, Globe, Scale, Truck, TrendingUp, Landmark } from "lucide-react";
-import { services as servicesContent } from "@/content/site";
+import { useSiteContent } from "@/context/SiteContentProvider";
 import { MotionLink } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
@@ -11,13 +11,20 @@ import { TiltCard } from "./TiltCard";
 const icons = [Briefcase, Globe, Scale, Truck, TrendingUp, Landmark];
 
 export function Services() {
+  const { content } = useSiteContent();
+  const servicesContent = content.services;
+
   return (
     <section
       id="services"
       className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy-deep"
     >
       <PageWrap>
-        <SectionIntro eyebrow={servicesContent.eyebrow} title={servicesContent.title} />
+        <SectionIntro
+          eyebrow={servicesContent.eyebrow}
+          title={servicesContent.title}
+          description={servicesContent.description}
+        />
 
         <RevealStagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={0.09}>
           {servicesContent.items.map((s, i) => {

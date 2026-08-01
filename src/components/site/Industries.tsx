@@ -13,7 +13,8 @@ import {
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 
-import { industries as industriesContent, brand, logos } from "@/content/site";
+import { logos } from "@/content/logos";
+import { useSiteContent } from "@/context/SiteContentProvider";
 
 import { MotionLink } from "./MotionCTA";
 import { PageWrap } from "./PageWrap";
@@ -28,6 +29,8 @@ const industryIcons: Record<string, typeof HeartPulse> = {
   Government: Landmark,
   "Consumer Goods": ShoppingBag,
   Technology: Cpu,
+  Retail: ShoppingBag,
+  Industrial: Factory,
 };
 
 /**
@@ -124,15 +127,18 @@ function IndustryNode({
 }
 
 export function Industries() {
+  const { content } = useSiteContent();
+  const industriesContent = content.industries;
+  const brand = content.brand;
   const reduceMotion = useReducedMotion();
   const orbitRef = useRef<HTMLDivElement>(null);
   // Non-latching: parks the chase while the ring is off screen instead of
   // animating forever in the background.
   const onScreen = useInView(orbitRef, { amount: 0.2 });
 
-  const items = industriesContent.items.map((label) => ({
-    label,
-    icon: industryIcons[label] ?? Building2,
+  const items = industriesContent.items.map((item) => ({
+    label: item.title,
+    icon: industryIcons[item.title] ?? Building2,
   }));
 
   // Counter-rotating rings: slow enough to read as ambient, not spinning.
@@ -154,6 +160,7 @@ export function Industries() {
           align="center"
           eyebrow={industriesContent.eyebrow}
           title={industriesContent.title}
+          description={industriesContent.description}
           titleClassName="mt-4 font-display text-[clamp(1.75rem,7vw,2.25rem)] font-light leading-tight"
         />
 
