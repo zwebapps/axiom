@@ -153,7 +153,7 @@ export function Contact() {
       className="site-section scroll-mt-[var(--site-nav-h)] bg-navy pb-16 md:pb-24"
     >
       <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
-        <div>
+        <div className="flex flex-col gap-16 md:gap-20">
           <SectionIntro
             eyebrow={contactContent.eyebrow}
             title={contactContent.title}
@@ -161,8 +161,8 @@ export function Contact() {
             titleClassName="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light uppercase leading-[1.12] tracking-[0.04em]"
             descriptionClassName="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground"
           />
-          <Reveal delay={220} variant="scale">
-            <div className="mt-14 flex flex-col gap-7 pt-1">
+          <Reveal delay={220} variant="rise">
+            <div className="flex flex-col gap-7">
               {contactContent.channels.map((channel) => (
                 <ContactChannel
                   key={channel.label}
