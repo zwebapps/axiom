@@ -67,8 +67,8 @@ export function Navbar() {
   // intercept the opacity/transform Motion drives, leaving the two to fight
   // over the same values.
   const chrome = scrolled
-    ? "border-b border-border bg-navy-deep/92 py-3 backdrop-blur-xl"
-    : "border-b-0 py-3 md:py-4";
+    ? "border-b border-border bg-navy-deep/92 py-2.5 backdrop-blur-xl md:py-3"
+    : "border-b-0 py-2.5 md:py-3";
 
   return (
     <motion.header
@@ -94,7 +94,7 @@ export function Navbar() {
         <a
           href="#home"
           aria-label={`${brand.name} home`}
-          className="min-w-0 shrink-0 rounded-xs focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:outline-none"
+          className="isolate min-w-0 shrink-0 rounded-xs focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:outline-none"
         >
           <Logo lockup animate={false} />
         </a>

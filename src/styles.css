@@ -130,7 +130,7 @@
 
   --page-x: clamp(1.125rem, 2.5vw, 2.125rem);
   --page-wide: min(100%, 1560px);
-  --site-nav-h: 4.75rem;
+  --site-nav-h: 6.25rem;
 }
 
 .site-section {

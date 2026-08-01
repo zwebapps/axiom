@@ -45,10 +45,16 @@ export function Footer() {
         </PageWrap>
       </div>
 
-      <PageWrap className="grid gap-12 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-        <Reveal variant="slideRight">
-          <Logo lockup animate={false} />
-          <p className="mt-6 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
+      <PageWrap className="grid gap-12 pt-12 pb-6 md:pt-14 md:pb-8 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:gap-10 lg:pt-16 lg:pb-8">
+        <Reveal variant="slideRight" className="-mt-4 flex flex-col md:-mt-6 lg:-mt-10">
+          <a
+            href="#home"
+            className="isolate inline-block leading-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:outline-none"
+            aria-label={`${brand.name} home`}
+          >
+            <Logo lockup footer animate={false} />
+          </a>
+          <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
             {footerContent.blurb}
           </p>
         </Reveal>
