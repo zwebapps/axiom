@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
-import { ArrowRight, CheckCircle2, Mail, MessageSquare, Phone, User } from "lucide-react";
+import { ArrowRight, CheckCircle2, Globe, Mail, MessageSquare, Phone, User } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { contact as contactContent } from "@/content/site";
@@ -69,6 +69,54 @@ function fieldClass(hasError: boolean) {
     : `${fieldBase} border-border/70 hover:border-border focus:border-gold/45 focus:bg-navy-deep/70 focus:ring-2 focus:ring-gold/20`;
 }
 
+const channelIcons = {
+  phone: Phone,
+  mail: Mail,
+  globe: Globe,
+} as const;
+
+function ContactChannel({
+  icon,
+  label,
+  value,
+  href,
+}: {
+  icon: keyof typeof channelIcons;
+  label: string;
+  value: string;
+  href?: string;
+}) {
+  const Icon = channelIcons[icon];
+  const body = (
+    <>
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-gold/35 bg-navy-deep/45 text-gold">
+        <Icon size={18} strokeWidth={1.35} aria-hidden />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[10px] font-medium tracking-[0.2em] text-muted-foreground uppercase">
+          {label}
+        </span>
+        <span className="mt-1 block text-[15px] font-medium text-foreground transition-colors group-hover:text-gold">
+          {value}
+        </span>
+      </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        className="group flex items-start gap-4 transition-colors duration-300"
+      >
+        {body}
+      </a>
+    );
+  }
+
+  return <div className="flex items-start gap-4">{body}</div>;
+}
+
 export function Contact() {
   const reduceMotion = useReducedMotion();
   const [name, setName] = useState("");
@@ -100,36 +148,30 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="site-section scroll-mt-[var(--site-nav-h)] border-b border-border bg-navy">
+    <section
+      id="contact"
+      className="site-section scroll-mt-[var(--site-nav-h)] bg-navy pb-16 md:pb-24"
+    >
       <PageWrap className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-20">
         <div>
           <SectionIntro
             eyebrow={contactContent.eyebrow}
             title={contactContent.title}
             description={contactContent.description}
-            titleClassName="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light leading-[1.12]"
+            titleClassName="mt-5 font-display text-[clamp(2rem,3.4vw,2.75rem)] font-light uppercase leading-[1.12] tracking-[0.04em]"
             descriptionClassName="mt-6 max-w-md text-[15px] leading-[1.75] text-muted-foreground"
           />
           <Reveal delay={220} variant="scale">
-            <div className="mt-14 space-y-4 pt-1">
-              <a
-                href={`mailto:${contactContent.email}`}
-                className="inline-flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/35 text-gold">
-                  <Mail size={16} strokeWidth={1.4} />
-                </span>
-                {contactContent.email}
-              </a>
-              <a
-                href={`tel:${contactContent.phoneTel}`}
-                className="flex items-center gap-3 rounded-sm border border-border/80 bg-navy-deep/40 px-4 py-3 text-[13px] text-foreground transition-colors duration-300 hover:border-gold/40 hover:text-gold"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/35 text-gold">
-                  <Phone size={16} strokeWidth={1.4} />
-                </span>
-                {contactContent.phone}
-              </a>
+            <div className="mt-14 flex flex-col gap-7 pt-1">
+              {contactContent.channels.map((channel) => (
+                <ContactChannel
+                  key={channel.label}
+                  icon={channel.icon}
+                  label={channel.label}
+                  value={channel.value}
+                  href={"href" in channel ? channel.href : undefined}
+                />
+              ))}
             </div>
           </Reveal>
         </div>
@@ -141,11 +183,9 @@ export function Contact() {
               aria-hidden
             />
             <div className="border-b border-border/50 px-6 py-4 sm:px-8 sm:py-5">
-              <p className="text-[11px] font-medium tracking-[0.22em] text-gold uppercase">
-                Inquiry form
-              </p>
-              <p className="mt-1 text-[13px] text-muted-foreground">
-                All fields are required. We typically respond within one business day.
+              <p className="font-display text-xl italic text-foreground">{contactContent.form.title}</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                {contactContent.form.subtitle}
               </p>
             </div>
 
@@ -199,8 +239,8 @@ export function Contact() {
                     exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
                     transition={reduceMotion ? { duration: 0 } : { duration: 0.34, ease: easeLux }}
                   >
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <Field id="contact-name" label="Name" error={errors.name}>
+                    <div className="grid gap-6">
+                      <Field id="contact-name" label={contactContent.labels.name} error={errors.name}>
                         <div className="relative">
                           <User
                             className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
@@ -226,7 +266,7 @@ export function Contact() {
                         </div>
                       </Field>
 
-                      <Field id="contact-email" label="Email" error={errors.email}>
+                      <Field id="contact-email" label={contactContent.labels.email} error={errors.email}>
                         <div className="relative">
                           <Mail
                             className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground/70"
@@ -255,7 +295,7 @@ export function Contact() {
                       </Field>
                     </div>
 
-                    <Field id="contact-message" label="Message" error={errors.message}>
+                    <Field id="contact-message" label={contactContent.labels.message} error={errors.message}>
                       <div className="relative">
                         <MessageSquare
                           className="pointer-events-none absolute top-3.5 left-3.5 text-muted-foreground/70"
@@ -266,7 +306,7 @@ export function Contact() {
                         <textarea
                           id="contact-message"
                           name="message"
-                          rows={5}
+                          rows={3}
                           value={message}
                           onChange={(e) => {
                             setMessage(e.target.value);
@@ -274,18 +314,22 @@ export function Contact() {
                               setErrors((prev) => ({ ...prev, message: undefined }));
                           }}
                           placeholder={contactContent.placeholders.message}
-                          className={`${fieldClass(Boolean(errors.message))} min-h-[148px] resize-y pt-3.5`}
+                          className={`${fieldClass(Boolean(errors.message))} min-h-[100px] resize-y pt-3.5`}
                           aria-invalid={Boolean(errors.message)}
                           aria-describedby={errors.message ? "contact-message-error" : undefined}
                         />
                       </div>
                     </Field>
 
-                    <div className="border-t border-border/50 pt-6">
-                      <div className="flex sm:justify-end">
+                    <div className="border-t border-border/50 pt-8">
+                      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+                        <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground sm:max-w-md sm:pb-1">
+                          <Mail size={14} className="mt-0.5 shrink-0 opacity-60" aria-hidden />
+                          {contactContent.footnote}
+                        </p>
                         <MotionButton
                           type="submit"
-                          className="btn-gold group w-full justify-center px-8 sm:w-auto"
+                          className="btn-gold group w-full shrink-0 justify-center px-8 sm:w-auto"
                         >
                           {contactContent.submit}
                           <ArrowRight
@@ -294,10 +338,6 @@ export function Contact() {
                           />
                         </MotionButton>
                       </div>
-                      <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-                        <Mail size={14} className="mt-0.5 shrink-0 opacity-60" aria-hidden />
-                        {contactContent.footnote}
-                      </p>
                     </div>
                   </motion.form>
                 )}

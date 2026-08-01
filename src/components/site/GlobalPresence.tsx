@@ -5,7 +5,7 @@ import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 
 import { globalPresence as globalContent, keyRegions } from "@/content/site";
-import { inViewOptions } from "@/lib/motion-presets";
+import { easeLux, inViewOptions } from "@/lib/motion-presets";
 
 import { CountUp } from "./CountUp";
 import { PageWrap } from "./PageWrap";
@@ -13,38 +13,91 @@ import { RegionFlagStrip } from "./RegionFlagStrip";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
 
-const mapHubs = {
-  usa: { x: 23, y: 38 },
-  eu: { x: 50, y: 31 },
-  gcc: { x: 61, y: 44 },
-  asia: { x: 74, y: 47 },
-  af: { x: 53, y: 58 },
-} as const;
+type CorridorHub = "usa" | "eu" | "gcc" | "asia" | "af" | "lam" | "pac";
 
-const corridorPairs: { from: keyof typeof mapHubs; to: keyof typeof mapHubs; bend: number }[] = [
-  { from: "usa", to: "eu", bend: -8 },
-  { from: "usa", to: "gcc", bend: 6 },
-  { from: "usa", to: "asia", bend: 10 },
-  { from: "usa", to: "af", bend: -5 },
+type MapPin = {
+  x: number;
+  y: number;
+  /** When set, this pin is a corridor endpoint (arcs attach here only). */
+  hub?: CorridorHub;
+};
+
+const pins: MapPin[] = [
+  { x: 22, y: 34, hub: "usa" },
+  { x: 30, y: 62, hub: "lam" },
+  { x: 47, y: 30, hub: "eu" },
+  { x: 55, y: 45, hub: "af" },
+  { x: 63, y: 38, hub: "gcc" },
+  { x: 72, y: 55, hub: "asia" },
+  { x: 80, y: 68, hub: "pac" },
 ];
 
-function corridorPath(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  bend: number,
-  reverse = false,
-) {
-  const mx = (x1 + x2) / 2 + bend;
-  const my = (y1 + y2) / 2 - Math.abs(x2 - x1) * 0.12;
-  if (reverse) {
-    return `M ${x2} ${y2} Q ${mx + bend * 0.35} ${my + 4} ${x1} ${y1}`;
+const usaCorridorHubs: Exclude<CorridorHub, "usa">[] = [
+  "eu",
+  "gcc",
+  "asia",
+  "af",
+  "lam",
+  "pac",
+];
+
+function corridorHubPoints(allPins: MapPin[]) {
+  const points = {} as Record<CorridorHub, { x: number; y: number }>;
+  for (const pin of allPins) {
+    if (pin.hub) points[pin.hub] = { x: pin.x, y: pin.y };
   }
-  return `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
+  return points;
 }
 
-function MapCorridorArcs() {
+/** Curved lane — laneSign separates outbound vs return paths (hero-style lateral spread). */
+function mapArcPath(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  laneSign: number,
+) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const mx = (from.x + to.x) / 2;
+  const my = (from.y + to.y) / 2;
+  const nx = (-dy / len) * laneSign * 3.8;
+  const ny = (dx / len) * laneSign * 3.8;
+  const lift = -len * 0.12;
+  const cx = mx + nx;
+  const cy = my + lift + ny * 0.25;
+  return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+}
+
+function MapArcLayer({ d, dim = false }: { d: string; dim?: boolean }) {
+  const alpha = dim ? 0.72 : 1;
+  return (
+    <g opacity={alpha}>
+      <path d={d} fill="none" stroke="rgba(210,166,87,0.14)" strokeWidth="0.52" strokeLinecap="round" />
+      <path d={d} fill="none" stroke="rgba(210,166,87,0.26)" strokeWidth="0.36" strokeLinecap="round" />
+      <path d={d} fill="none" stroke="#D2A657" strokeWidth="0.26" strokeLinecap="round" opacity="0.92" />
+    </g>
+  );
+}
+
+function MapArcTraffic({ d, duration, delay = 0 }: { d: string; duration: number; delay?: number }) {
+  return (
+    <>
+      <circle r="0.45" fill="#FFF6E4" opacity="0.95">
+        <animateMotion dur={`${duration}s`} begin={`${delay}s`} repeatCount="indefinite" path={d} calcMode="linear" />
+      </circle>
+      <circle r="0.75" fill="#D2A657" opacity="0.35">
+        <animateMotion dur={`${duration}s`} begin={`${delay}s`} repeatCount="indefinite" path={d} calcMode="linear" />
+      </circle>
+    </>
+  );
+}
+
+function MapCorridorArcs({ allPins }: { allPins: MapPin[] }) {
+  const reduceMotion = useReducedMotion();
+  const hubs = corridorHubPoints(allPins);
+  const usa = hubs.usa;
+  if (!usa) return null;
+
   return (
     <svg
       className="pointer-events-none absolute inset-0 h-full w-full"
@@ -52,63 +105,28 @@ function MapCorridorArcs() {
       preserveAspectRatio="none"
       aria-hidden
     >
-      <defs>
-        <linearGradient id="mapArcGold" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#F5C76A" stopOpacity="0.15" />
-          <stop offset="45%" stopColor="#F5C76A" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#FFB347" stopOpacity="0.2" />
-        </linearGradient>
-      </defs>
-      {corridorPairs.map(({ from, to, bend }) => {
-        const a = mapHubs[from];
-        const b = mapHubs[to];
+      {usaCorridorHubs.map((destId, i) => {
+        const dest = hubs[destId];
+        if (!dest) return null;
+        const outPath = mapArcPath(usa, dest, 1);
+        const inPath = mapArcPath(dest, usa, -1);
+        const dur = 4.8 + i * 0.35;
         return (
-          <g key={`${from}-${to}`}>
-            <path
-              d={corridorPath(a.x, a.y, b.x, b.y, bend, false)}
-              fill="none"
-              stroke="url(#mapArcGold)"
-              strokeWidth="0.35"
-              strokeLinecap="round"
-              opacity="0.75"
-            />
-            <path
-              d={corridorPath(a.x, a.y, b.x, b.y, bend, true)}
-              fill="none"
-              stroke="url(#mapArcGold)"
-              strokeWidth="0.22"
-              strokeLinecap="round"
-              opacity="0.45"
-              strokeDasharray="1.2 1.8"
-            />
+          <g key={destId}>
+            <MapArcLayer d={outPath} />
+            <MapArcLayer d={inPath} dim />
+            {!reduceMotion ? (
+              <>
+                <MapArcTraffic d={outPath} duration={dur} delay={i * 0.4} />
+                <MapArcTraffic d={inPath} duration={dur + 0.6} delay={0.55 + i * 0.4} />
+              </>
+            ) : null}
           </g>
         );
       })}
-      {(Object.entries(mapHubs) as [keyof typeof mapHubs, { x: number; y: number }][]).map(
-        ([id, p]) => (
-          <circle
-            key={id}
-            cx={p.x}
-            cy={p.y}
-            r="0.85"
-            fill="#D2A657"
-            opacity="0.9"
-          />
-        ),
-      )}
     </svg>
   );
 }
-
-const pins = [
-  { x: 22, y: 34 },
-  { x: 30, y: 62 },
-  { x: 47, y: 30 },
-  { x: 55, y: 45 },
-  { x: 63, y: 38 },
-  { x: 72, y: 55 },
-  { x: 80, y: 68 },
-];
 
 /** Seconds before the first pin starts falling, and between each one after. */
 const PIN_LEAD_IN = 0.35;
@@ -222,6 +240,138 @@ function MapPins() {
   );
 }
 
+function Support247Value({ className }: { className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, inViewOptions);
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return (
+      <span className={className} aria-label="24/7">
+        24/7
+      </span>
+    );
+  }
+
+  return (
+    <motion.span
+      ref={ref}
+      className={className}
+      aria-label="24/7"
+      initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+      animate={
+        inView
+          ? { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 0, y: 14, filter: "blur(6px)" }
+      }
+      transition={{ duration: 0.75, ease: easeLux }}
+    >
+      24
+      <motion.span
+        className="global-figures__slash"
+        aria-hidden
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        /
+      </motion.span>
+      7
+    </motion.span>
+  );
+}
+
+function GlobalFigureValue({
+  value,
+  className,
+  delay,
+}: {
+  value: string;
+  className?: string;
+  delay: number;
+}) {
+  if (value === "24/7") {
+    return <Support247Value className={className} />;
+  }
+  return <CountUp value={value} className={className} delay={delay} duration={2.1} />;
+}
+
+function GlobalFigureCell({
+  value,
+  label,
+  index,
+  liveLabel,
+}: {
+  value: string;
+  label: string;
+  index: number;
+  liveLabel?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, inViewOptions);
+  const reduceMotion = useReducedMotion();
+  const countDelay = 0.12 + index * 0.14;
+
+  return (
+    <motion.div
+      ref={ref}
+      className={`global-figures__cell`}
+      initial={reduceMotion ? false : { opacity: 0, y: 18, scale: 0.96 }}
+      animate={reduceMotion || inView ? { opacity: 1, y: 0, scale: 1 } : undefined}
+      transition={{ duration: 0.65, delay: index * 0.08, ease: easeLux }}
+    >
+      <GlobalFigureValue
+        value={value}
+        className="global-figures__value"
+        delay={countDelay}
+      />
+      {liveLabel ? (
+        <div className="global-figures__label global-figures__label--live">
+          <span className="global-figures__live-dot" aria-hidden />
+          {label}
+        </div>
+      ) : (
+        <motion.div
+          className="global-figures__label"
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={reduceMotion || inView ? { opacity: 1 } : undefined}
+          transition={{ duration: 0.5, delay: countDelay + 0.35, ease: easeLux }}
+        >
+          {label}
+        </motion.div>
+      )}
+    </motion.div>
+  );
+}
+
+function GlobalPresenceFigures() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      className="global-figures panel group rounded-xs border border-border"
+      aria-label="Global presence figures"
+    >
+      <div className="global-figures__overlay" aria-hidden>
+        <div className="global-figures__sheen" />
+        <div className="global-figures__top-flow">
+          <span className="global-figures__top-track" />
+          <span className="global-figures__top-shine" />
+          {!reduceMotion ? <span className="global-figures__top-dot" /> : null}
+        </div>
+      </div>
+      {globalContent.figures.map((f, i) => (
+        <GlobalFigureCell
+          key={f.label}
+          value={f.value}
+          label={f.label}
+          index={i}
+          liveLabel={f.value === "24/7"}
+        />
+      ))}
+    </section>
+  );
+}
+
 export function GlobalPresence() {
   return (
     <section
@@ -250,7 +400,7 @@ export function GlobalPresence() {
                   WebkitMaskRepeat: "no-repeat",
                 }}
               />
-              <MapCorridorArcs />
+              <MapCorridorArcs allPins={pins} />
               <MapPins />
             </div>
           </Reveal>
@@ -276,26 +426,9 @@ export function GlobalPresence() {
           </Reveal>
         </div>
 
-        <div className="mt-16 pt-4">
-          <RevealStagger
-            className="panel grid grid-cols-2 rounded-xs border border-border lg:grid-cols-4"
-            stagger={0.1}
-          >
-            {globalContent.figures.map((f, i) => (
-              <RevealItem
-                key={f.label}
-                className={`px-6 py-7 text-center ${i > 0 ? "lg:hairline-x" : ""}`}
-                variant="scale"
-              >
-                <CountUp
-                  value={f.value}
-                  className="block font-display text-3xl text-foreground tabular-nums"
-                />
-                <div className="mt-1 text-xs text-muted-foreground">{f.label}</div>
-              </RevealItem>
-            ))}
-          </RevealStagger>
-        </div>
+        <Reveal className="mt-16 pt-4" variant="rise">
+          <GlobalPresenceFigures />
+        </Reveal>
       </PageWrap>
     </section>
   );

@@ -198,27 +198,56 @@ export const insights = {
 } as const;
 
 export const contact = {
-  eyebrow: "Contact Us",
-  title: "Send us a message",
+  eyebrow: "Get in touch",
+  title: "Schedule a\nConsultation",
   description:
-    "Share your requirement and we will contact you shortly. Your message opens in your email app and is addressed to info@axiomvertexgroup.com.",
+    "Empower your enterprise to expand, optimize trading routes, and secure cross-border partnerships with our dedicated executive advisors.",
   email: "info@axiomvertexgroup.com",
-  phone: "+1 (646) 555-0142",
-  phoneTel: "+16465550142",
-  footnote: "This opens your email app and sends to info@axiomvertexgroup.com.",
-  placeholders: {
-    name: "Your name",
-    email: "your@email.com",
-    message: "Write your message...",
+  phone: "+1 (214) 940-6338",
+  phoneTel: "+12149406338",
+  hq: "Austin, Texas, USA",
+  channels: [
+    {
+      icon: "phone" as const,
+      label: "Inquiries hotline",
+      value: "+1 (214) 940-6338",
+      href: "tel:+12149406338",
+    },
+    {
+      icon: "mail" as const,
+      label: "Corporate email",
+      value: "info@axiomvertexgroup.com",
+      href: "mailto:info@axiomvertexgroup.com",
+    },
+    {
+      icon: "globe" as const,
+      label: "Primary HQ office",
+      value: "Austin, Texas, USA",
+    },
+  ],
+  form: {
+    title: "Request a Strategy Session",
+    subtitle: "Direct route to our regional directors. No templates, no bots.",
   },
-  submit: "Send Message",
+  footnote: "This opens your email app and sends to info@axiomvertexgroup.com.",
+  labels: {
+    name: "Your name",
+    email: "Company email",
+    message: "Primary goal",
+  },
+  placeholders: {
+    name: "E.g., Alexander Mercer",
+    email: "E.g., alex@enterprise.com",
+    message: "E.g., International trade expansion",
+  },
+  submit: "Book a Consultation",
   successTitle: "Your email app should open",
   successBody:
     "If it did not open automatically, send your message directly to info@axiomvertexgroup.com.",
   errors: {
     name: "Please enter your name.",
     email: "Please enter a valid email address.",
-    message: "Please enter a message.",
+    message: "Please describe your primary goal.",
   },
 } as const;
 

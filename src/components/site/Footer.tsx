@@ -16,7 +16,7 @@ export function Footer() {
 
   return (
     <footer className="bg-navy">
-      <div className="border-b border-border">
+      <div className="border-y border-border">
         <PageWrap>
           <RevealStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" stagger={0.1}>
             {footerContent.pillars.map((p, i) => {
@@ -56,18 +56,47 @@ export function Footer() {
           <Reveal key={c.title} delay={100 + i * 90} variant="fade">
             <h4 className="eyebrow">{c.title}</h4>
             <ul className="mt-5 space-y-3">
-              {c.links.map((l) => (
-                <li key={l}>
-                  <motion.a
-                    href="#home"
-                    className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
-                    whileHover={reduceMotion ? undefined : { x: 5 }}
-                    transition={springSnappy}
-                  >
-                    {l}
-                  </motion.a>
-                </li>
-              ))}
+              {c.links.map((l) => {
+                if (c.title === "Regions" && l === "Africa") {
+                  return (
+                    <li key="africa-europe" className="flex flex-wrap items-center gap-x-3">
+                      <motion.a
+                        href="#global"
+                        className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
+                        whileHover={reduceMotion ? undefined : { x: 5 }}
+                        transition={springSnappy}
+                      >
+                        Africa
+                      </motion.a>
+                      <span className="text-[13px] text-border" aria-hidden>
+                        ·
+                      </span>
+                      <motion.a
+                        href="#global"
+                        className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
+                        whileHover={reduceMotion ? undefined : { x: 5 }}
+                        transition={springSnappy}
+                      >
+                        Europe
+                      </motion.a>
+                    </li>
+                  );
+                }
+                if (c.title === "Regions" && l === "Europe") return null;
+
+                return (
+                  <li key={l}>
+                    <motion.a
+                      href={c.title === "Regions" ? "#global" : "#home"}
+                      className="inline-block text-[13px] text-muted-foreground transition-colors duration-300 hover:text-gold"
+                      whileHover={reduceMotion ? undefined : { x: 5 }}
+                      transition={springSnappy}
+                    >
+                      {l}
+                    </motion.a>
+                  </li>
+                );
+              })}
             </ul>
           </Reveal>
         ))}
