@@ -74,9 +74,9 @@ STATIC_BASE=/subfolder/ npm run build:static
 
 Then upload the contents of `static-html/` into that subfolder.
 
-### Theme preview toggle
+### Theme
 
-The bottom-right **New / Classic / Original** toggle runs in the browser via `localStorage` (no server).
+The live site uses **classic styling with updated copy** only. The preview toggle has been removed.
 
 ### Source for static build
 

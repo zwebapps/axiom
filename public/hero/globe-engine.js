@@ -9,7 +9,6 @@ const D2R = Math.PI/180;
 
 const NODES = [
   {id:"USA", label:"USA",          lon:-74.0, lat:40.7},
-  {id:"EU",  label:"EUROPE",       lon:10.45, lat:51.16},
   {id:"AE",  label:"UAE",          lon:55.27, lat:25.2},
   {id:"SA",  label:"SAUDI ARABIA", lon:46.72, lat:24.71},
   {id:"QA",  label:"QATAR",        lon:51.53, lat:25.29},
@@ -20,7 +19,6 @@ const NODES = [
 const GOLD = "#D2A657";
 const CORRIDOR_DOTS = ["#3B82F6", "#EAB308", "#22C55E", "#38BDF8", "#F97316"];
 const LINKS = [
-  {a:"USA", b:"EU", key:1, packets:3},
   {a:"USA", b:"AE", key:1, packets:4},
   {a:"USA", b:"PK", key:1, packets:4},
   {a:"USA", b:"ZA", key:1, packets:3},
@@ -40,12 +38,6 @@ const FLAGS = {
    <path d="M0 0l34 23M34 0L0 23" stroke="#C4212F" stroke-width="2.2"/>
    <path d="M17 0v23M0 11.5h34" stroke="#F4F5F7" stroke-width="7.4"/>
    <path d="M17 0v23M0 11.5h34" stroke="#C4212F" stroke-width="4.2"/></svg>`,
- EU:`<svg viewBox="0 0 34 23"><rect width="34" height="23" fill="#1B3F8B"/>
-   <g fill="#F4C542"><circle cx="17" cy="11.5" r="6.2" fill="none" stroke="#F4C542" stroke-width=".9"/>
-   <circle cx="17" cy="5.8" r=".75"/><circle cx="20.2" cy="6.7" r=".75"/><circle cx="22.8" cy="9.2" r=".75"/>
-   <circle cx="23.6" cy="12.2" r=".75"/><circle cx="22.8" cy="15.2" r=".75"/><circle cx="20.2" cy="17.6" r=".75"/>
-   <circle cx="17" cy="18.5" r=".75"/><circle cx="13.8" cy="17.6" r=".75"/><circle cx="11.2" cy="15.2" r=".75"/>
-   <circle cx="10.4" cy="12.2" r=".75"/><circle cx="11.2" cy="9.2" r=".75"/><circle cx="13.8" cy="6.7" r=".75"/></g></svg>`,
  DE:`<svg viewBox="0 0 34 23"><rect width="34" height="7.67" fill="#15181C"/><rect y="7.67" width="34" height="7.67" fill="#C4212F"/><rect y="15.33" width="34" height="7.67" fill="#E2B23A"/></svg>`,
  AE:`<svg viewBox="0 0 34 23"><rect width="34" height="7.67" fill="#1B8A4B"/><rect y="7.67" width="34" height="7.67" fill="#F4F5F7"/><rect y="15.33" width="34" height="7.67" fill="#15181C"/><rect width="8.5" height="23" fill="#C4212F"/></svg>`,
  SA:`<svg viewBox="0 0 34 23"><rect width="34" height="23" fill="#0E7A3C"/>
@@ -109,7 +101,6 @@ const nodeV = NODES.map(n=>unit(n.lon,n.lat));
 /* Per destination — tuned to hero mock (Figma): UK low Atlantic hop, DE slightly
    higher, Gulf routes sweep with their own apex, Pakistan on a separate arc. */
 const ARC_TUNING = {
-  EU: { lift: 0.056, bend: 0.022, spread: -0.012, sign:  1, phase: 0.24 },
   AE: { lift: 0.070, bend: 0.038, spread:  0.040, sign: -1, phase: -0.20 },
   SA: { lift: 0.064, bend: 0.032, spread:  0.032, sign: -1, phase: 0.05 },
   PK: { lift: 0.076, bend: 0.046, spread:  0.048, sign:  1, phase: 0.40 },

@@ -46,6 +46,6 @@ STATIC_BASE=/subfolder/ npm run build:static
 
 Then upload the contents of `static-html/` into that subfolder.
 
-## Theme toggle
+## Theme
 
-The bottom-right preview toggle works in the browser via `localStorage` (no server).
+Production uses **classic styling + updated copy** only (no version switcher on the site).

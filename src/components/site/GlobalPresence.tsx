@@ -13,7 +13,7 @@ import { RegionFlagStrip } from "./RegionFlagStrip";
 import { Reveal, RevealItem, RevealStagger } from "./Reveal";
 import { SectionIntro } from "./SectionIntro";
 
-type CorridorHub = "usa" | "eu" | "gcc" | "asia" | "af" | "lam" | "pac";
+type CorridorHub = "usa" | "gcc" | "asia" | "af" | "lam" | "pac";
 
 type MapPin = {
   x: number;
@@ -25,21 +25,13 @@ type MapPin = {
 const pins: MapPin[] = [
   { x: 22, y: 34, hub: "usa" },
   { x: 30, y: 62, hub: "lam" },
-  { x: 47, y: 30, hub: "eu" },
   { x: 55, y: 45, hub: "af" },
   { x: 63, y: 38, hub: "gcc" },
   { x: 72, y: 55, hub: "asia" },
   { x: 80, y: 68, hub: "pac" },
 ];
 
-const usaCorridorHubs: Exclude<CorridorHub, "usa">[] = [
-  "eu",
-  "gcc",
-  "asia",
-  "af",
-  "lam",
-  "pac",
-];
+const usaCorridorHubs: Exclude<CorridorHub, "usa">[] = ["gcc", "asia", "af", "lam", "pac"];
 
 function corridorHubPoints(allPins: MapPin[]) {
   const points = {} as Record<CorridorHub, { x: number; y: number }>;

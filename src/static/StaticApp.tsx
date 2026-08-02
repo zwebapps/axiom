@@ -1,6 +1,5 @@
 import { About } from "@/components/site/About";
 import { Contact } from "@/components/site/Contact";
-import { ContentVersionToggle } from "@/components/site/ContentVersionToggle";
 import { Footer } from "@/components/site/Footer";
 import { GlobalPresence } from "@/components/site/GlobalPresence";
 import { Hero } from "@/components/site/Hero";
@@ -29,7 +28,6 @@ export function StaticApp() {
       <Insights />
       <Contact />
       <Footer />
-      <ContentVersionToggle />
     </SiteContentProvider>
   );
 }

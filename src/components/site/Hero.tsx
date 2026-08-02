@@ -229,7 +229,7 @@ export function Hero() {
             role="img"
           />
           <p className="sr">
-            Live corridors connect the United States with Europe, the GCC, South Asia, and Africa.
+            Live corridors connect the United States with the GCC, South Asia, and Africa.
           </p>
           <div
             className="globe__hit"

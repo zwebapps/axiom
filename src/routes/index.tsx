@@ -17,7 +17,6 @@ export const Route = createFileRoute("/")({
 });
 
 import { SiteContentProvider } from "@/context/SiteContentProvider";
-import { ContentVersionToggle } from "@/components/site/ContentVersionToggle";
 import { SiteSeo } from "@/components/site/SiteSeo";
 
 function HomePage() {
@@ -35,7 +34,6 @@ function HomePage() {
       <Insights />
       <Contact />
       <Footer />
-      <ContentVersionToggle />
     </SiteContentProvider>
   );
 }

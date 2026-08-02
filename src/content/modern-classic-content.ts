@@ -3,6 +3,11 @@ import * as legacyRaw from "./legacy-site.raw";
 import { modernContent } from "./modern-content";
 import { buildSeo } from "./site-seo";
 
+const keyRegionsNoEurope = legacyRaw.keyRegions.filter((r) => r.label !== "Europe");
+const heroCorridorRegionsNoEurope = legacyRaw.heroCorridorRegions.filter(
+  (r) => r.label !== "Europe",
+);
+
 /**
  * Classic style + new content: mockup copy, `theme-legacy`, enterprise hero logos.
  */
@@ -14,8 +19,15 @@ export const modernClassicContent: SiteContent = {
     ...modernContent.brand,
     heroEyebrowBadge: false,
   },
-  heroCorridorRegions: legacyRaw.heroCorridorRegions,
-  keyRegions: legacyRaw.keyRegions,
+  heroCorridorRegions: heroCorridorRegionsNoEurope,
+  keyRegions: keyRegionsNoEurope,
+  globalPresence: {
+    ...modernContent.globalPresence,
+    regions: keyRegionsNoEurope.map((r) => r.label),
+    figures: modernContent.globalPresence.figures.map((f) =>
+      f.label === "Regions" ? { ...f, value: String(keyRegionsNoEurope.length) } : f,
+    ),
+  },
   heroClientLogos: legacyRaw.heroClientLogos,
   seo: buildSeo({
     title: "Axiom Vertex Group | Strategic Trade & Consultancy (Classic)",
