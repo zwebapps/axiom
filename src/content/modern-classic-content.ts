@@ -28,7 +28,6 @@ export const modernClassicContent: SiteContent = {
       f.label === "Regions" ? { ...f, value: String(keyRegionsNoEurope.length) } : f,
     ),
   },
-  heroClientLogos: legacyRaw.heroClientLogos,
   seo: buildSeo({
     title: "Axiom Vertex Group | Strategic Trade & Consultancy (Classic)",
     description:

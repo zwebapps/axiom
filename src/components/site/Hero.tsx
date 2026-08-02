@@ -7,9 +7,8 @@ import { useSiteContent } from "@/context/SiteContentProvider";
 import { publicUrl } from "@/lib/public-url";
 import { easeLux } from "@/lib/motion-presets";
 import { CountUp } from "./CountUp";
-import { HeroClientLogo } from "./HeroClientLogo";
 import { MotionLink } from "./MotionCTA";
-import { Reveal, RevealItem, RevealStagger } from "./Reveal";
+import { RevealItem, RevealStagger } from "./Reveal";
 
 import "@/styles/axiom-hero.css";
 
@@ -18,8 +17,6 @@ declare global {
     initAxiomGlobe?: (root: HTMLElement) => void;
   }
 }
-
-const DESKTOP_HERO_MQ = "(min-width: 768px)";
 
 function HeroCopy() {
   const { content } = useSiteContent();
@@ -161,34 +158,40 @@ export function Hero() {
     const root = rootRef.current;
     if (!root) return;
 
-    const mq = window.matchMedia(DESKTOP_HERO_MQ);
-    const run = () => {
-      if (!mq.matches) return;
-      const init = () => {
-        if (root.dataset.globeReady === "1") return;
-        window.initAxiomGlobe?.(root);
-        root.dataset.globeReady = "1";
-      };
-      if (window.initAxiomGlobe) {
-        init();
-        return;
-      }
-      const existing = document.querySelector('script[data-axiom-globe="1"]');
-      if (existing) {
-        existing.addEventListener("load", init, { once: true });
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = publicUrl("hero/globe-engine.js");
-      script.async = true;
-      script.dataset.axiomGlobe = "1";
-      script.onload = init;
-      document.body.appendChild(script);
+    const init = () => {
+      if (root.dataset.globeReady === "1") return;
+      window.initAxiomGlobe?.(root);
+      root.dataset.globeReady = "1";
     };
 
-    run();
-    mq.addEventListener("change", run);
-    return () => mq.removeEventListener("change", run);
+    const scheduleInit = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(init);
+      });
+    };
+
+    if (window.initAxiomGlobe) {
+      scheduleInit();
+      return;
+    }
+    const existing = document.querySelector('script[data-axiom-globe="1"]');
+    if (existing) {
+      if (existing.dataset.loaded === "1") {
+        scheduleInit();
+      } else {
+        existing.addEventListener("load", scheduleInit, { once: true });
+      }
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = publicUrl("hero/globe-engine.js");
+    script.async = true;
+    script.dataset.axiomGlobe = "1";
+    script.onload = () => {
+      script.dataset.loaded = "1";
+      scheduleInit();
+    };
+    document.body.appendChild(script);
   }, []);
 
   return (
@@ -196,9 +199,6 @@ export function Hero() {
       <section className="hero">
         <div className="hero__bg" />
         <div className="hero__grid" />
-        <div className="hero__globe-mobile" aria-hidden="true">
-          <img src={publicUrl("hero/earth-fallback.png")} alt="" width={1024} height={1024} decoding="async" />
-        </div>
         <div className="hero__scrim" aria-hidden="true" />
 
         <HeroCopy />
@@ -270,19 +270,6 @@ export function Hero() {
             </svg>
           </button>
         </div>
-      </section>
-
-      <section className="clients clients--desktop">
-        <Reveal variant="blur">
-          <span className="eyebrow">Trusted by forward-thinking organizations</span>
-        </Reveal>
-        <RevealStagger className="clients__row" stagger={0.07} id="clients">
-          {content.heroClientLogos.map((id) => (
-            <RevealItem key={id}>
-              <HeroClientLogo id={id} />
-            </RevealItem>
-          ))}
-        </RevealStagger>
       </section>
 
       <RevealStagger

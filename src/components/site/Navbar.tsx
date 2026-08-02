@@ -10,21 +10,26 @@ import { easeLux, springSnappy } from "@/lib/motion-presets";
 import { Logo } from "./Logo";
 import { MotionLink } from "./MotionCTA";
 
-/** Two 2px bars that morph into an X. */
+/** Two bars centered on the button; translate + rotate into an X (no `top` animation). */
 function MenuIcon({ open }: { open: boolean }) {
   const reduceMotion = useReducedMotion();
-  const transition = reduceMotion ? { duration: 0 } : springSnappy;
+  const transition = reduceMotion ? { duration: 0 } : { duration: 0.25, ease: easeLux };
+
+  const bar =
+    "absolute inset-x-0 top-1/2 mx-auto block h-[2px] w-5 rounded-full bg-current origin-center";
 
   return (
-    <span className="relative block h-4 w-5" aria-hidden>
+    <span className="relative block h-5 w-5 shrink-0" aria-hidden>
       <motion.span
-        className="absolute left-0 block h-[1.5px] w-5 rounded-full bg-current"
-        animate={open ? { top: 7, rotate: 45 } : { top: 3, rotate: 0 }}
+        className={bar}
+        initial={false}
+        animate={open ? { y: -1, rotate: 45 } : { y: -6, rotate: 0 }}
         transition={transition}
       />
       <motion.span
-        className="absolute left-0 block h-[1.5px] w-5 rounded-full bg-current"
-        animate={open ? { top: 7, rotate: -45 } : { top: 11, rotate: 0 }}
+        className={bar}
+        initial={false}
+        animate={open ? { y: -1, rotate: -45 } : { y: 4, rotate: 0 }}
         transition={transition}
       />
     </span>
