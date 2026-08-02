@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
+import globeEngineUrl from "@/assets/globe-engine.js?url";
 import { useSiteContent } from "@/context/SiteContentProvider";
-import { publicUrl } from "@/lib/public-url";
 import { easeLux } from "@/lib/motion-presets";
 import { CountUp } from "./CountUp";
 import { MotionLink } from "./MotionCTA";
@@ -14,8 +14,38 @@ import "@/styles/axiom-hero.css";
 
 declare global {
   interface Window {
-    initAxiomGlobe?: (root: HTMLElement) => void;
+    initAxiomGlobe?: (root: HTMLElement) => boolean | void;
   }
+}
+
+function loadGlobeEngineScript(): Promise<void> {
+  if (window.initAxiomGlobe) return Promise.resolve();
+
+  const existing = document.querySelector('script[data-axiom-globe="1"]');
+  if (existing) {
+    if (existing.getAttribute("data-loaded") === "1" && window.initAxiomGlobe) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve, reject) => {
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", () => reject(new Error("globe-engine load failed")), {
+        once: true,
+      });
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = globeEngineUrl;
+    script.async = true;
+    script.dataset.axiomGlobe = "1";
+    script.onload = () => {
+      script.dataset.loaded = "1";
+      resolve();
+    };
+    script.onerror = () => reject(new Error("globe-engine load failed"));
+    document.body.appendChild(script);
+  });
 }
 
 function HeroCopy() {
@@ -158,40 +188,28 @@ export function Hero() {
     const root = rootRef.current;
     if (!root) return;
 
-    const init = () => {
-      if (root.dataset.globeReady === "1") return;
-      window.initAxiomGlobe?.(root);
-      root.dataset.globeReady = "1";
+    let cancelled = false;
+
+    const run = () => {
+      if (cancelled || root.dataset.globeReady === "1") return;
+      const ok = window.initAxiomGlobe?.(root);
+      if (ok !== false) root.dataset.globeReady = "1";
     };
 
-    const scheduleInit = () => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(init);
+    void loadGlobeEngineScript()
+      .then(() => {
+        if (cancelled) return;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(run);
+        });
+      })
+      .catch((err) => {
+        console.warn("[axiom-globe]", err);
       });
-    };
 
-    if (window.initAxiomGlobe) {
-      scheduleInit();
-      return;
-    }
-    const existing = document.querySelector('script[data-axiom-globe="1"]');
-    if (existing) {
-      if (existing.dataset.loaded === "1") {
-        scheduleInit();
-      } else {
-        existing.addEventListener("load", scheduleInit, { once: true });
-      }
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = publicUrl("hero/globe-engine.js");
-    script.async = true;
-    script.dataset.axiomGlobe = "1";
-    script.onload = () => {
-      script.dataset.loaded = "1";
-      scheduleInit();
+    return () => {
+      cancelled = true;
     };
-    document.body.appendChild(script);
   }, []);
 
   return (

@@ -35,5 +35,13 @@ for (const file of [".htaccess", "README.md"]) {
   console.log(`Copied ${file} → static-html/`);
 }
 
+const globeSrc = path.join(root, "src/assets/globe-engine.js");
+const globePublic = path.join(root, "public/hero/globe-engine.js");
+if (existsSync(globeSrc)) {
+  copyFileSync(globeSrc, globePublic);
+  copyFileSync(globeSrc, path.join(out, "hero/globe-engine.js"));
+  console.log("Synced globe-engine.js → public/hero/ and static-html/hero/");
+}
+
 mkdirSync(out, { recursive: true });
 console.log("\nDeploy: upload all files inside static-html/ to your host.");
