@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 import globeEngineUrl from "@/assets/globe-engine.js?url";
 import { useSiteContent } from "@/context/SiteContentProvider";
+import { publicUrl } from "@/lib/public-url";
 import { easeLux } from "@/lib/motion-presets";
 import { CountUp } from "./CountUp";
 import { MotionLink } from "./MotionCTA";
@@ -196,12 +197,19 @@ export function Hero() {
       if (ok !== false) root.dataset.globeReady = "1";
     };
 
+    const scheduleInit = () => {
+      requestAnimationFrame(() => {
+        run();
+        requestAnimationFrame(run);
+      });
+    };
+
     void loadGlobeEngineScript()
       .then(() => {
         if (cancelled) return;
-        requestAnimationFrame(() => {
-          requestAnimationFrame(run);
-        });
+        scheduleInit();
+        window.addEventListener("orientationchange", scheduleInit);
+        window.visualViewport?.addEventListener("resize", scheduleInit);
       })
       .catch((err) => {
         console.warn("[axiom-globe]", err);
@@ -209,11 +217,18 @@ export function Hero() {
 
     return () => {
       cancelled = true;
+      window.removeEventListener("orientationchange", scheduleInit);
+      window.visualViewport?.removeEventListener("resize", scheduleInit);
     };
   }, []);
 
   return (
-    <div ref={rootRef} className="axiom-hero" id="home">
+    <div
+      ref={rootRef}
+      className="axiom-hero"
+      id="home"
+      data-earth-texture={publicUrl("hero/earth-night-lights.webp")}
+    >
       <section className="hero">
         <div className="hero__bg" />
         <div className="hero__grid" />

@@ -43,6 +43,12 @@ export const Route = createRootRoute({
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      {
+        rel: "preload",
+        href: "/hero/earth-night-lights.webp",
+        as: "image",
+        type: "image/webp",
+      },
       { rel: "canonical", href: "https://axiomvertexgroup.com/" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
