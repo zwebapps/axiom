@@ -44,15 +44,23 @@ This creates the **`static-html/`** folder with:
 
 `static-html/` is gitignored; run the build before each upload.
 
-### Step 2 — Upload
+### Step 2 — Test locally (do not double-click index.html)
+
+Browsers block the app when you open `index.html` from disk (`file://`). Use:
+
+```bash
+npm run preview:static
+```
+
+Then open the URL shown (e.g. `http://localhost:4173`).
+
+### Step 3 — Upload
 
 Upload **everything inside `static-html/`** to your host document root (e.g. `public_html`).
 
-- Site URL should be `https://yourdomain.com/` (document root).
-- **HTTPS** is recommended (contact uses `mailto:`).
-- PHP is not required.
+**Important:** Deploy **`static-html/index.html`** plus the **`assets/`** folder and all of `public/` (brand, hero, etc.). Do **not** upload `static-hosting/index.html` alone — that file is only a build template.
 
-### Step 3 — Apache (optional)
+### Step 4 — Apache (optional)
 
 If `.htaccess` causes a **500 error**, delete it on the server. This site is one page with `#` section links and does not need rewrites.
 

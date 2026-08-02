@@ -8,11 +8,27 @@ Upload **everything inside this folder** to your host document root (e.g. `publi
 npm run build:static
 ```
 
-That produces this folder: HTML, `assets/`, and copies of `public/` (brand, hero, favicon, etc.).
+Output folder: **`static-html/`** (not `static-hosting/`).
+
+| Folder / file | Use |
+|---------------|-----|
+| **`static-html/`** | ✅ Upload this entire folder to your host |
+| **`static-hosting/`** | ❌ Source template only — will look empty if opened or uploaded as-is |
+
+## Test before upload
+
+Do **not** double-click `index.html` on your computer — browsers block the app on `file://`.
+
+```bash
+npm run preview:static
+```
+
+Open the HTTP URL printed in the terminal.
 
 ## Requirements
 
 - **Document root** deployment (site at `https://yourdomain.com/`).
+- Upload **`index.html`**, **`assets/`**, **`hero/`**, **`brand/`**, and other files together.
 - **HTTPS** recommended (contact form uses `mailto:`).
 - PHP not required.
 
@@ -22,13 +38,13 @@ That produces this folder: HTML, `assets/`, and copies of `public/` (brand, hero
 
 ## Subfolder deploy
 
-If the site lives at `https://yourdomain.com/subfolder/`, rebuild with:
+If the site lives at `https://yourdomain.com/subfolder/`:
 
 ```bash
 STATIC_BASE=/subfolder/ npm run build:static
 ```
 
-(Then upload the contents of `static-html/` into that subfolder.)
+Then upload the contents of `static-html/` into that subfolder.
 
 ## Theme toggle
 
